@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include foundary *.css
+recursive-include foundary *.csv
+recursive-include foundary *.html
+recursive-include foundary *.ico
+recursive-include foundary *.js
+recursive-include foundary *.json
+recursive-include foundary *.md
+recursive-include foundary *.png
+recursive-include foundary *.py
+recursive-include foundary *.svg
+recursive-include foundary *.txt
+recursive-exclude foundary *.pyc
