@@ -25,7 +25,13 @@ frappe.query_reports["Work Order Status"] = {
 			"label": __("Item"),
 			"fieldtype": "Link",
 			"options": "Item",
-			"reqd": 1
+			"reqd": 0
+		},
+		{
+			"fieldname":"operation",
+			"label": __("Operation"),
+			"fieldtype": "Link",
+			"options": "Operation"
 		},
 		{
 			"fieldname":"company",

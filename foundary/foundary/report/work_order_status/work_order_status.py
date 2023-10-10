@@ -31,6 +31,7 @@ def execute(filters=None):
 def get_columns(filters):
 	columns = [
 		{"label": _("Name"), "fieldname": "name", "fieldtype": "Link", "options": "Work Order", "width": 150},
+		{"label": _("Item"), "fieldname": "production_item", "fieldtype": "Link", "options": "Item", "width": 150},
 		{"label": _("Date"), "fieldname": "planned_start_date", "fieldtype": "Date", "width": 100},
 		{"label": _("Qty To Manufacture"), "fieldname": "qty", "fieldtype": "Float", "width": 100},
 		{"label": _("Material Transferred for Manufacturing"), "fieldname": "material_transferred_for_manufacturing", "fieldtype": "Float", "width": 100},
@@ -63,6 +64,7 @@ def get_data(filters):
 def column_query(filters):
 	# get production item from filters
 	production_item = re.escape(filters.get("production_item", ""))
+	operation = re.escape(filters.get("operation", ""))
 	conditions = ''
 	if filters.get("from_date"):		
 		conditions += "AND DATE(wo.planned_start_date) >= '{}' \n".format(str(filters.get("from_date")))
@@ -77,9 +79,10 @@ def column_query(filters):
 	column = frappe.db.sql("""SELECT item_code from `tabWork Order Item` as woi
 	LEFT JOIN `tabWork Order` as wo ON woi.parent = wo.name 
 	WHERE `production_item` = '{}' {}
+	OR woi.operation = '{}' {}
 	GROUP BY item_code
 	ORDER BY woi.idx
-	""".format(production_item,conditions)
+	""".format(production_item,conditions, operation, conditions)
 	)
 
 	return column
@@ -87,6 +90,7 @@ def column_query(filters):
 def data_query(filters):
 	# getting data from filters
 	production_item = re.escape(filters.get("production_item", ""))
+	operation = re.escape(filters.get("operation", ""))
 	company = re.escape(filters.get("company", ""))
 	from_date = filters.get("from_date", None)
 	to_date = filters.get("to_date", None)
@@ -106,14 +110,19 @@ def data_query(filters):
 		condition += 'AND ' if condition != '' else 'WHERE '
 		condition += "wo.production_item = '{}' \n".format(production_item)
 	
+	if operation:
+		condition += 'AND ' if condition != '' else 'WHERE '
+		condition += "woi.operation = '{}' \n".format(operation)
+	
 	if company:
 		condition += 'AND ' if condition != '' else 'WHERE '
 		condition += "wo.company = '{}' \n".format(company)
 	
 	# sql query to get data for column
 	data = frappe.db.sql("""SELECT 
-	wo.planned_start_date, 
+	wo.planned_start_date,
 	wo.name,
+	wo.production_item,
 	wo.qty,
 	wo.material_transferred_for_manufacturing,
 	wo.produced_qty
@@ -130,7 +139,7 @@ def data_query(filters):
 
 		# frappe.msgprint(name)
 		sub_data = frappe.db.sql("""SELECT 
-		item_code,transferred_qty 
+		item_code,consumed_qty
 		FROM `tabWork Order Item` 
 		WHERE parent = '{}'""".format(name))
 
