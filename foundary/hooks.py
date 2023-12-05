@@ -48,6 +48,12 @@ doctype_js = {"Work Order" : "public/doc_js/work_order.js",
 #	"Role": "home_page"
 # }
 
+# from erpnext.stock.doctype.stock_entry.stock_entry import StockEntry
+# from foundary.foundary.doc_events.stock_entry import check_if_operations_completed, set_process_loss_qty, get_scrap_items_from_job_card
+# StockEntry.check_if_operations_completed = check_if_operations_completed
+# StockEntry.set_process_loss_qty = set_process_loss_qty
+# StockEntry.get_scrap_items_from_job_card = get_scrap_items_from_job_card
+
 # Generators
 # ----------
 
@@ -98,7 +104,8 @@ doctype_js = {"Work Order" : "public/doc_js/work_order.js",
 # Override standard doctype classes
 
 override_doctype_class = {
-	"BOM": "foundary.override.override_bom.CustomBOM"
+	"BOM": "foundary.override.override_bom.CustomBOM",
+    "Stock Entry": "foundary.foundary.doc_events.stock_entry.CustomStockEntry"
 }
 
 # Document Events

@@ -50,7 +50,7 @@ def get_column_data():
         {
             "fieldname": "stock_qty",
             "label": _("Stock Qty"),
-            "fieldtype": "Data",
+            "fieldtype": "Float",
             "width": 120
         }
     ]
@@ -77,20 +77,13 @@ def get_data(filters, columns):
         sales_data['difference_qty'] = float(sales_data['so_qty']) - float(sales_data['delivered_qty'])
 
         warehouse_data = get_warehouse_respect_to_the_item(sales_data.item_code)
+        frappe.msgprint(str(warehouse_data))
+
         for w_data in warehouse_data:
-            fieldname = f"{w_data.warehouse.replace('-', '').replace(' ', '_')}"
+            warehouse_data=w_data.warehouse.split("-")[0]
+            fieldname = f"{warehouse_data.replace('-', '').replace(' ', '_')}"
             sales_data[fieldname] = w_data.actual_qty
 
-            new_dict = {
-                'label': _(f'{w_data.warehouse}'),
-                'fieldname': fieldname,
-                'fieldtype': 'Float',
-                'width': 150
-            }
-
-            # making dyanamic column
-            if new_dict not in new_columns:
-                new_columns.append(new_dict)
         
         #getting item and its total child_sum with respect to the warehouse
         dict_data=get_child_bom_data_with_parent_item_code(sales_data.item_name)
@@ -100,6 +93,19 @@ def get_data(filters, columns):
                 fieldname = f"{key.replace('-', '').replace(' ', '_')}"
                 sales_data[fieldname]+=value
 
+    #making warehouse present for the particular company
+    all_warehouse_name=get_all_warehouse_name(filters)
+    for warehouse in all_warehouse_name:
+            fieldname = f"{warehouse.name.replace('-', '').replace(' ', '_')}"
+            new_dict = {
+            'label': _(f'{warehouse.name}'),
+            'fieldname': fieldname,
+            'fieldtype': 'Float',
+            'width': 150
+            }
+            # making dyanamic column
+            if new_dict not in new_columns:
+                new_columns.append(new_dict)
 
     columns.extend(new_columns)
 
@@ -118,10 +124,19 @@ def get_warehouse_respect_to_the_item(item_code):
     warehouse_data = frappe.db.sql("""
         SELECT warehouse, actual_qty
         FROM `tabBin` 
-        WHERE item_code = %s
+        WHERE item_code = %s 
     """, item_code, as_dict=True)
 
     return warehouse_data
+
+#getting all the warehouse name
+def get_all_warehouse_name(filters):
+    warehouse=frappe.db.sql(f"""
+        SELECT warehouse.warehouse_name as name
+        FROM `tabWarehouse` warehouse
+        WHERE warehouse.company = "{filters.get('company')}" AND warehouse.is_group!=1
+    """,  as_dict=True)
+    return warehouse
 
 
 #getting child data with parent_bom
@@ -161,7 +176,8 @@ def get_child_bom_data_with_parent_item_code(item_name):
             key=w_q['warehouse']
             actual_qty=w_q['actual_qty']
             if key not in dict_data.keys():
-                fieldname = f"{key.replace('-', '').replace(' ', '_')}"
+                warehouse_key=key.split("-")[0]
+                fieldname = f"{warehouse_key.replace('-', '').replace(' ', '_')}"
                 dict_data[fieldname]=float(actual_qty)
             else:
                 fieldname = f"{key.replace('-', '').replace(' ', '_')}"
