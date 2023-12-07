@@ -118,8 +118,14 @@ class CustomStockEntry(StockEntry):
                     fields=["sum(process_loss_qty) as process_loss_qty"],
                 )
 
+                finish_data = frappe.get_all(
+                    "Stock Entry",
+                    filters={"purpose": "Manufacture", "work_order": self.work_order},
+                    fields=["sum(process_loss_qty) as process_loss_qty"],
+                )
+
                 if data and data[0].process_loss_qty is not None:
-                    process_loss_qty = data[0].process_loss_qty
+                    process_loss_qty = data[0].process_loss_qty - finish_data[0].process_loss_qty
                     if flt(self.process_loss_qty, precision) != flt(process_loss_qty, precision):
                         self.process_loss_qty = flt(process_loss_qty, precision)
 
