@@ -125,7 +125,7 @@ class CustomStockEntry(StockEntry):
                 )
 
                 if data and data[0].process_loss_qty is not None:
-                    process_loss_qty = data[0].process_loss_qty - finish_data[0].process_loss_qty
+                    process_loss_qty = flt(data[0].process_loss_qty) - flt(finish_data[0].process_loss_qty)
                     if flt(self.process_loss_qty, precision) != flt(process_loss_qty, precision):
                         self.process_loss_qty = flt(process_loss_qty, precision)
 
