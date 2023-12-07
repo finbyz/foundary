@@ -9,7 +9,15 @@ frappe.query_reports["SO Production Status"] = {
             label: __('Company'),
             fieldtype: 'Link',
             options: 'Company',
+			default: frappe.defaults.get_user_default("Company"),
+			reqd: 1
         },
+		{
+			fieldname: "item_code",
+			label: __("Item Code"),
+			fieldtype: "Link",
+			options:"Item"
+		},
 	]
 	// ],
 	// "treeView": true,

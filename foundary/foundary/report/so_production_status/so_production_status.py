@@ -1,195 +1,188 @@
-# Copyright (c) 2023, FinByz Tech Pvt Ltd and contributors
-# For license information, please see license.txt
-
 import frappe
 from frappe import _
 
-# intitializing list for getting its all item bom
-bom_dict=[]
-bom_hashed_value={}
 
 def execute(filters=None):
     columns = get_column_data()
     data, columns = get_data(filters, columns)
     return columns, data
 
+
 def get_column_data():
     return [
         {
-            'label': _('Sales Order'),
-            'fieldname': 'sales_order',
-            'fieldtype': 'Link',
-            'width': 150,
-            'options': 'Sales Order'
+            "label": _("Sales Order"),
+            "fieldname": "sales_order",
+            "fieldtype": "Link",
+            "width": 150,
+            "options": "Sales Order",
         },
         {
             "fieldname": "item_code",
             "label": _("Item Code"),
             "fieldtype": "Link",
             "width": 180,
-            'options': 'Item'
+            "options": "Item",
         },
         {
             "fieldname": "so_qty",
             "label": _("SO Qty"),
             "fieldtype": "Float",
-            "width": 120
+            "width": 120,
         },
         {
             "fieldname": "delivered_qty",
             "label": _("Delivered Qty"),
             "fieldtype": "Float",
-            "width": 120
+            "width": 120,
         },
         {
             "fieldname": "difference_qty",
             "label": _("Remaining Qty"),
             "fieldtype": "Float",
-            "width": 120
+            "width": 120,
         },
         {
             "fieldname": "stock_qty",
             "label": _("Stock Qty"),
             "fieldtype": "Float",
-            "width": 120
-        }
+            "width": 120,
+        },
     ]
 
-def get_data(filters, columns):
-    global bom_dict
-    bom_dict = []
-    global bom_hashed_value
-    bom_hashed_value={}
 
-    sales_order_data = frappe.db.sql(f"""
+def get_data(filters, columns):
+    condition = ""
+    if filters.get("item_code"):
+        condition += f"AND soi.item_code = '{filters.get('item_code')}'"
+
+    # initializing dictionary for ignoring maximum depth limit
+    item_all_child_warehouse_stoock = {}
+
+    sales_order_data = frappe.db.sql(
+        f"""
         SELECT so.name as sales_order, soi.item_code as item_code, soi.qty as so_qty, soi.delivered_qty as delivered_qty, soi.item_name as item_name
         FROM `tabSales Order` so
         INNER JOIN `tabSales Order Item` soi ON so.name = soi.parent
-        WHERE so.company = "{filters.get('company')}" AND so.status NOT IN ("Completed", "Closed", "Cancelled")
-    """, as_dict=True)
+        WHERE so.company = "{filters.get('company')}" AND so.status NOT IN ("Completed", "Closed", "Cancelled") {condition}
+    """,
+        as_dict=True,
+    )
 
-    new_columns = []
-
+    bin_data = get_bin_data_with_all_warehouse(filters)
 
     for sales_data in sales_order_data:
-        sum_data = get_actual_quantity_of_item_from_all_warehouse(sales_data.item_code)
-        sales_data['stock_qty'] = sum_data
-        sales_data['difference_qty'] = float(sales_data['so_qty']) - float(sales_data['delivered_qty'])
+        sales_data["difference_qty"] = float(sales_data["so_qty"]) - float(
+            sales_data["delivered_qty"]
+        )
 
-        warehouse_data = get_warehouse_respect_to_the_item(sales_data.item_code)
-        frappe.msgprint(str(warehouse_data))
+        # getting all the warehouse stock sum for the particular item_code
+        sum_data = 0.00
+        for b_data in bin_data:
+            if b_data.item_code == sales_data.item_code:
+                sum_data += float(b_data.actual_qty)
 
-        for w_data in warehouse_data:
-            warehouse_data=w_data.warehouse.split("-")[0]
-            fieldname = f"{warehouse_data.replace('-', '').replace(' ', '_')}"
-            sales_data[fieldname] = w_data.actual_qty
+        sales_data["stock_qty"] = sum_data
 
-        
-        #getting item and its total child_sum with respect to the warehouse
-        dict_data=get_child_bom_data_with_parent_item_code(sales_data.item_name)
+        # getting all child bom data with respect toparent item code
+        child_bom_data = get_child_data_with_respect_to_item_code(
+            sales_data.item_code, item_all_child_warehouse_stoock, bin_data
+        )
 
-        if dict_data:
-            for key,value in dict_data.items():
-                fieldname = f"{key.replace('-', '').replace(' ', '_')}"
-                sales_data[fieldname]+=value
+        for keys, values in child_bom_data.items():
+            sales_data.update({keys: values})
 
-    #making warehouse present for the particular company
-    all_warehouse_name=get_all_warehouse_name(filters)
-    for warehouse in all_warehouse_name:
-            fieldname = f"{warehouse.name.replace('-', '').replace(' ', '_')}"
-            new_dict = {
-            'label': _(f'{warehouse.name}'),
-            'fieldname': fieldname,
-            'fieldtype': 'Float',
-            'width': 150
-            }
-            # making dyanamic column
-            if new_dict not in new_columns:
-                new_columns.append(new_dict)
+    # getting all the warehouse list
+    warehouse_list = get_all_the_warehouse_list(filters)
 
-    columns.extend(new_columns)
+    for warehouse_name in warehouse_list:
+        fieldname = f"{warehouse_name.name.replace('-', '').replace(' ', '_')}"
+        new_dict = {
+            "label": _(f"{warehouse_name.name}"),
+            "fieldname": fieldname.lower(),
+            "fieldtype": "Float",
+            "width": 150,
+        }
+        columns.append(new_dict)
+
 
     return sales_order_data, columns
 
-def get_actual_quantity_of_item_from_all_warehouse(item_code):
-    actual_quantity_sum = frappe.db.sql("""
-        SELECT SUM(actual_qty) as sum
-        FROM `tabBin` 
-        WHERE item_code = %s 
-    """, item_code, as_dict=True)
 
-    return actual_quantity_sum[0].sum
+# getting all the actual qty,warehouse,item_code with respect to the company
+def get_bin_data_with_all_warehouse(filters):
+    bin_data = frappe.db.sql(
+        f"""
+       SELECT bin.item_code,bin.actual_qty,bin.warehouse
+       FROM `tabBin` bin
+       INNER JOIN `tabWarehouse` warehouse on warehouse.name=bin.warehouse
+       WHERE warehouse.company="{filters.get('company')}" AND warehouse.is_group!=1 
+    """,
+        as_dict=True,
+    )
+    return bin_data
 
-def get_warehouse_respect_to_the_item(item_code):
-    warehouse_data = frappe.db.sql("""
-        SELECT warehouse, actual_qty
-        FROM `tabBin` 
-        WHERE item_code = %s 
-    """, item_code, as_dict=True)
 
-    return warehouse_data
-
-#getting all the warehouse name
-def get_all_warehouse_name(filters):
-    warehouse=frappe.db.sql(f"""
-        SELECT warehouse.warehouse_name as name
+# getting all the warehouse list
+def get_all_the_warehouse_list(filters):
+    warehouse = frappe.db.sql(
+        f"""
+        SELECT warehouse.name as name
         FROM `tabWarehouse` warehouse
-        WHERE warehouse.company = "{filters.get('company')}" AND warehouse.is_group!=1
-    """,  as_dict=True)
+        WHERE warehouse.company = "{filters.get('company')}" AND warehouse.is_group!=1 
+        ORDER BY warehouse.sequence_no
+    """,
+        as_dict=True,
+    )
     return warehouse
 
 
-#getting child data with parent_bom
-def get_child_bom_data_with_parent_item_code(item_name):
+# gettting nested child table details
+def get_child_data_with_respect_to_item_code(item_code, item_all_child_warehouse_stoock, bin_data):
 
-    global bom_dict
-    if item_name in bom_dict:
-        if item_name not in bom_hashed_value.keys():
-            return {}
-        return bom_hashed_value[item_name]
+
+    if str(item_code) in item_all_child_warehouse_stoock.keys():
+        return item_all_child_warehouse_stoock[str(item_code)]
     
-    #adding the value into list
-    bom_dict.append(item_name)
-    
-    
-    bom_data= frappe.db.sql("""
-        SELECT bom_item.item_code as item_code,bom_item.item_name as item_name
+    bom_data = frappe.db.sql(
+        """
+        SELECT bom_item.item_code as item_code, bom_item.item_name as item_name
         FROM `tabBOM` bom
-        INNER JOIN `tabBOM Item` bom_item on bom.name=bom_item.parent
-        WHERE bom_item.item_name = %s AND bom.is_default=1
-    """, item_name, as_dict=True)
+        INNER JOIN `tabBOM Item` bom_item ON bom.name = bom_item.parent
+        WHERE bom.item = %s AND bom.is_default = 1 AND bom.docstatus = 1
+        """,
+        (item_code,),
+        as_dict=True,
+    )
 
 
-    if  len(bom_data)==0:
+    if len(bom_data) == 0:
         return {}
     
-    current_dict={}
+    #declaring dict for all warehouse data
+    parent_dict={}
 
     # gettting nested child item_bom with respect to parent
     for item_data in bom_data:
-        dict_data=get_child_bom_data_with_parent_item_code(item_data.item_name)
+        dict_data = get_child_data_with_respect_to_item_code(
+            item_data.item_code, item_all_child_warehouse_stoock, bin_data
+        )
 
-        #getting warehouse qty
-        warehouse_qty=get_warehouse_respect_to_the_item(item_data.item_name)
-        
-        for w_q in warehouse_qty:
-            key=w_q['warehouse']
-            actual_qty=w_q['actual_qty']
-            if key not in dict_data.keys():
-                warehouse_key=key.split("-")[0]
-                fieldname = f"{warehouse_key.replace('-', '').replace(' ', '_')}"
-                dict_data[fieldname]=float(actual_qty)
+
+        for b_data in bin_data:
+            if b_data.item_code == item_code:
+                fieldname = f"{b_data.warehouse.replace('-', '').replace(' ', '_')}"
+                if fieldname.lower() in parent_dict.keys():
+                    parent_dict[fieldname.lower()]+=float(b_data.actual_qty)
+                else:
+                  parent_dict.update({fieldname.lower(): b_data.actual_qty})
+
+        for key, value in dict_data.items():
+            if key.lower() in parent_dict.keys():
+                parent_dict[key.lower()] += float(value)
             else:
-                fieldname = f"{key.replace('-', '').replace(' ', '_')}"
-                dict_data[fieldname]+=float(actual_qty)
+                parent_dict.update({key.lower(): float(value)})
 
-        for key,values in dict_data.items():
-            if key not in current_dict.keys():
-                current_dict[key]=values
-            else:
-                current_dict[key]+=values
+    item_all_child_warehouse_stoock.update({str(item_code): parent_dict})
 
-    #adding value in hashed dictionaries
-    bom_hashed_value.update({item_name: current_dict})
-
-    return current_dict
+    return parent_dict
