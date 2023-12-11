@@ -120,7 +120,7 @@ class CustomStockEntry(StockEntry):
 
                 finish_data = frappe.get_all(
                     "Stock Entry",
-                    filters={"purpose": "Manufacture", "work_order": self.work_order},
+                    filters={"purpose": "Manufacture", "work_order": self.work_order, "docstatus": 1},
                     fields=["sum(process_loss_qty) as process_loss_qty"],
                 )
 
