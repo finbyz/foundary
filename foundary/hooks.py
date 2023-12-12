@@ -105,7 +105,9 @@ doctype_js = {"Work Order" : "public/doc_js/work_order.js",
 
 override_doctype_class = {
 	"BOM": "foundary.override.override_bom.CustomBOM",
-    "Stock Entry": "foundary.foundary.doc_events.stock_entry.CustomStockEntry"
+    "Stock Entry": "foundary.foundary.doc_events.stock_entry.CustomStockEntry",
+    "Job Card": "foundary.foundary.doc_events.job_card.CustomJobCard",
+    "Work Order": "foundary.foundary.doc_events.work_order.CustomWorkOrder"
 }
 
 # Document Events
