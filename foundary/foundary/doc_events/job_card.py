@@ -134,9 +134,8 @@ class CustomJobCard(JobCard):
 					all_process_loss_qty = frappe.db.sql(""" select sum(process_loss_qty) from `tabJob Card` where work_order=%s and docstatus = 1""",self.work_order, as_dict=1)[0]['sum(process_loss_qty)']
 					manufactured_qty = frappe.db.get_value("Work Order", self.work_order, "produced_qty")
 					process_loss_qty = frappe.db.get_value("Work Order", self.work_order, "process_loss_qty")
-					frappe.db.set_value("Work Order", self.work_order, "process_loss_qty", all_process_loss_qty)
 
-					pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(all_process_loss_qty)
+					pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(process_loss_qty)
 					# frappe.throw(str(pending_finish))
 					
 					second_completed_qty = second_last_operation.completed_qty if second_last_operation else last_operation.completed_qty
