@@ -90,7 +90,7 @@ class CustomJobCard(JobCard):
 			last_operation = sorted_operations[0]
 
 			sorted_operation = sorted(operations, key=lambda x: x.idx, reverse=True)
-			second_last_operation = sorted_operation[1]
+			second_last_operation = sorted_operation[1] if sorted_operations[1] else sorted_operation[0]
 
 			if self.operation == last_operation.operation: 
 				last_completed_qty = last_operation.completed_qty
