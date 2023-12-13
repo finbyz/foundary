@@ -89,41 +89,78 @@ class CustomJobCard(JobCard):
 			sorted_operations = sorted(operations, key=lambda x: x.idx, reverse=True)
 			last_operation = sorted_operations[0]
 
+			row = frappe.db.sql(""" select count(*) from `tabWork Order Operation` where parent=%s""",self.work_order, as_dict=1)[0]['count(*)']
 			sorted_operation = sorted(operations, key=lambda x: x.idx, reverse=True)
-			second_last_operation = sorted_operation[1] if sorted_operations[1] else sorted_operation[0]
+			if row != 1:
+				second_last_operation = sorted_operation[1]
+				if self.operation == last_operation.operation:
+					last_completed_qty = last_operation.completed_qty
+					pro_loss_qty = last_operation.process_loss_qty
+					all_process_loss_qty = frappe.db.sql(""" select sum(process_loss_qty) from `tabJob Card` where work_order=%s and docstatus = 1""",self.work_order, as_dict=1)[0]['sum(process_loss_qty)']
+					manufactured_qty = frappe.db.get_value("Work Order", self.work_order, "produced_qty")
+					process_loss_qty = frappe.db.get_value("Work Order", self.work_order, "process_loss_qty")
+					pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(process_loss_qty)
+					
+					
+					second_completed_qty = second_last_operation.completed_qty if second_last_operation else last_operation.completed_qty
+					# frappe.throw(str(last_completed_qty) + '-' + str(pro_loss_qty))
+					com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
+					qty = flt(second_completed_qty) - flt(com_loss_qty)
+					if self.for_quantity > qty:
+						frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(second_completed_qty, second_last_operation.operation) )
+					wo.db_set("pending_finish", pending_finish)		
 
-			if self.operation == last_operation.operation: 
-				last_completed_qty = last_operation.completed_qty
-				pro_loss_qty = last_operation.process_loss_qty
-				all_process_loss_qty = frappe.db.sql(""" select sum(process_loss_qty) from `tabJob Card` where work_order=%s and docstatus = 1""",self.work_order, as_dict=1)[0]['sum(process_loss_qty)']
-				manufactured_qty = frappe.db.get_value("Work Order", self.work_order, "produced_qty")
-				process_loss_qty = frappe.db.get_value("Work Order", self.work_order, "process_loss_qty")
-				pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(process_loss_qty)
-				
-				
-				second_completed_qty = second_last_operation.completed_qty
-				# frappe.throw(str(last_completed_qty) + '-' + str(pro_loss_qty))
-				com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
-				qty = flt(second_completed_qty) - flt(com_loss_qty)
-				if self.for_quantity > qty:
-					frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(second_completed_qty, second_last_operation.operation) )
-				wo.db_set("pending_finish", pending_finish)		
+				if self.operation == second_last_operation.operation:
+					# frappe.throw(str(second_last_operation.completed_qty))
+					last_completed_qty = last_operation.completed_qty
+					pro_loss_qty = last_operation.process_loss_qty
+					all_process_loss_qty = frappe.db.sql(""" select sum(process_loss_qty) from `tabJob Card` where work_order=%s and docstatus = 1""",self.work_order, as_dict=1)[0]['sum(process_loss_qty)']
+					manufactured_qty = frappe.db.get_value("Work Order", self.work_order, "produced_qty")
+					process_loss_qty = frappe.db.get_value("Work Order", self.work_order, "process_loss_qty")
+					pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(process_loss_qty)
 
-			if self.operation == second_last_operation.operation:
-				last_completed_qty = last_operation.completed_qty
-				pro_loss_qty = last_operation.process_loss_qty
-				all_process_loss_qty = frappe.db.sql(""" select sum(process_loss_qty) from `tabJob Card` where work_order=%s and docstatus = 1""",self.work_order, as_dict=1)[0]['sum(process_loss_qty)']
-				manufactured_qty = frappe.db.get_value("Work Order", self.work_order, "produced_qty")
-				process_loss_qty = frappe.db.get_value("Work Order", self.work_order, "process_loss_qty")
-				pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(process_loss_qty)
+					second_completed_qty = second_last_operation.completed_qty
+					com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
+					qty = flt(second_completed_qty) - flt(com_loss_qty)
+					if self.for_quantity > qty:
+						frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(second_completed_qty, second_last_operation.operation) )
+					wo.db_set("pending_finish", pending_finish)		
 
-				second_completed_qty = second_last_operation.completed_qty
-				com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
-				qty = flt(second_completed_qty) - flt(com_loss_qty)
-				if self.for_quantity > qty:
-					frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(second_completed_qty, second_last_operation.operation) )
-				wo.db_set("pending_finish", pending_finish)		
-		
+			if row == 1:
+				second_last_operation = sorted_operation[0] 
+				if self.operation == last_operation.operation: 
+					last_completed_qty = last_operation.completed_qty
+					pro_loss_qty = last_operation.process_loss_qty
+					all_process_loss_qty = frappe.db.sql(""" select sum(process_loss_qty) from `tabJob Card` where work_order=%s and docstatus = 1""",self.work_order, as_dict=1)[0]['sum(process_loss_qty)']
+					manufactured_qty = frappe.db.get_value("Work Order", self.work_order, "produced_qty")
+					process_loss_qty = frappe.db.get_value("Work Order", self.work_order, "process_loss_qty")
+					frappe.db.set_value("Work Order", self.work_order, "process_loss_qty", all_process_loss_qty)
+
+					pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(all_process_loss_qty)
+					# frappe.throw(str(pending_finish))
+					
+					second_completed_qty = second_last_operation.completed_qty if second_last_operation else last_operation.completed_qty
+					com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
+					qty = flt(second_completed_qty) - flt(com_loss_qty)
+					# if self.for_quantity > qty:
+					# 	frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(second_completed_qty, second_last_operation.operation) )
+					wo.db_set("pending_finish", pending_finish)		
+
+				if self.operation == second_last_operation.operation:
+					last_completed_qty = last_operation.completed_qty
+					pro_loss_qty = last_operation.process_loss_qty
+					all_process_loss_qty = frappe.db.sql(""" select sum(process_loss_qty) from `tabJob Card` where work_order=%s and docstatus = 1""",self.work_order, as_dict=1)[0]['sum(process_loss_qty)']
+					manufactured_qty = frappe.db.get_value("Work Order", self.work_order, "produced_qty")
+					process_loss_qty = frappe.db.get_value("Work Order", self.work_order, "process_loss_qty")
+					pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(process_loss_qty)
+
+					second_completed_qty = second_last_operation.completed_qty
+					com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
+					qty = flt(second_completed_qty) - flt(com_loss_qty)
+					# if self.for_quantity > qty:
+					# 	frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(second_completed_qty, second_last_operation.operation) )
+					wo.db_set("pending_finish", pending_finish)		
+
 		wo.flags.ignore_validate_update_after_submit = True
 		wo.update_operation_status()
 		wo.calculate_operating_cost()
