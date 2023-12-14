@@ -103,11 +103,12 @@ class CustomJobCard(JobCard):
 					
 					
 					second_completed_qty = second_last_operation.completed_qty if second_last_operation else last_operation.completed_qty
+					quantity = flt(second_completed_qty) - flt(last_completed_qty)
 					# frappe.throw(str(last_completed_qty) + '-' + str(pro_loss_qty))
 					com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
 					qty = flt(second_completed_qty) - flt(com_loss_qty)
 					if self.for_quantity > qty:
-						frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(second_completed_qty, second_last_operation.operation) )
+						frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(quantity, second_last_operation.operation) )
 					wo.db_set("pending_finish", pending_finish)		
 
 				if self.operation == second_last_operation.operation:
@@ -120,10 +121,11 @@ class CustomJobCard(JobCard):
 					pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(process_loss_qty)
 
 					second_completed_qty = second_last_operation.completed_qty
+					quantity = flt(second_completed_qty) - flt(last_completed_qty)
 					com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
 					qty = flt(second_completed_qty) - flt(com_loss_qty)
 					if self.for_quantity > qty:
-						frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(second_completed_qty, second_last_operation.operation) )
+						frappe.throw("Qty to manufacture in current operation cannot be greater than qty completed {0} in previous operation {1}.".format(quantity, second_last_operation.operation) )
 					wo.db_set("pending_finish", pending_finish)		
 
 			if row == 1:
@@ -139,6 +141,7 @@ class CustomJobCard(JobCard):
 					# frappe.throw(str(pending_finish))
 					
 					second_completed_qty = second_last_operation.completed_qty if second_last_operation else last_operation.completed_qty
+					quantity = flt(second_completed_qty) - flt(last_completed_qty)					
 					com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
 					qty = flt(second_completed_qty) - flt(com_loss_qty)
 					# if self.for_quantity > qty:
@@ -154,6 +157,7 @@ class CustomJobCard(JobCard):
 					pending_finish = flt(last_completed_qty) + flt(all_process_loss_qty) - flt(manufactured_qty) - flt(process_loss_qty)
 
 					second_completed_qty = second_last_operation.completed_qty
+					quantity = flt(second_completed_qty) - flt(last_completed_qty)					
 					com_loss_qty = flt(last_completed_qty + pro_loss_qty) - flt(self.total_completed_qty + self.process_loss_qty)
 					qty = flt(second_completed_qty) - flt(com_loss_qty)
 					# if self.for_quantity > qty:
