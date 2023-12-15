@@ -211,3 +211,7 @@ override_doctype_class = {
 # auth_hooks = [
 #	"foundary.auth.validate"
 # ]
+
+from erpnext.manufacturing.report.job_card_summary import job_card_summary
+from foundary.foundary.report.job_card_summary import execute
+job_card_summary.execute = execute
