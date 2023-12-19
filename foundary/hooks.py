@@ -106,8 +106,8 @@ doctype_js = {"Work Order" : "public/doc_js/work_order.js",
 override_doctype_class = {
 	"BOM": "foundary.override.override_bom.CustomBOM",
     "Stock Entry": "foundary.foundary.doc_events.stock_entry.CustomStockEntry",
-    "Job Card": "foundary.foundary.doc_events.job_card.CustomJobCard",
-    "Work Order": "foundary.foundary.doc_events.work_order.CustomWorkOrder"
+    # "Job Card": "foundary.foundary.doc_events.job_card.CustomJobCard",
+    # "Work Order": "foundary.foundary.doc_events.work_order.CustomWorkOrder"
 }
 
 # Document Events
@@ -121,6 +121,19 @@ override_doctype_class = {
 #		"on_trash": "method"
 #	}
 # }
+
+doc_events = {
+    "Job Card": {
+		"on_update": "foundary.foundary.doc_events.job_card.on_update"
+	},
+	"Work Order": {
+        "on_update": "foundary.foundary.doc_events.work_order.on_update",
+        "on_update_after_submit": "foundary.foundary.doc_events.work_order.on_update_after_submit"
+	},
+    "Stock Entry": {
+        "on_submit": "foundary.foundary.doc_events.stock_entry.on_submit"
+	}
+}
 
 # Scheduled Tasks
 # ---------------

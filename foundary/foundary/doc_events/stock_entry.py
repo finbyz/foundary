@@ -1,71 +1,25 @@
-import json
-from collections import defaultdict
-
 import frappe
 from frappe import _
-from frappe.model.mapper import get_mapped_doc
+from foundary.foundary.doc_events.work_order import update_work_order_pending_finish_qty
 from frappe.query_builder.functions import Sum
-from frappe.utils import (
-	cint,
-	comma_or,
-	cstr,
-	flt,
-	format_time,
-	formatdate,
-	getdate,
-	month_diff,
-	nowdate,
-)
+from erpnext.stock.doctype.stock_entry.stock_entry import StockEntry
+from frappe.utils import (cint,flt)
 
-import erpnext
-from erpnext.accounts.general_ledger import process_gl_map
-from erpnext.controllers.taxes_and_totals import init_landed_taxes_and_totals
-from erpnext.manufacturing.doctype.bom.bom import add_additional_cost, validate_bom_no
-from erpnext.setup.doctype.brand.brand import get_brand_defaults
-from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
-from erpnext.stock.doctype.batch.batch import get_batch_no, get_batch_qty, set_batch_nos
-from erpnext.stock.doctype.item.item import get_item_defaults
-from erpnext.stock.doctype.serial_no.serial_no import (
-	get_serial_nos,
-	update_serial_nos_after_submit,
-)
-from erpnext.stock.doctype.stock_reconciliation.stock_reconciliation import (
-	OpeningEntryAccountError,
-)
-from erpnext.stock.get_item_details import (
-	get_bin_details,
-	get_conversion_factor,
-	get_default_cost_center,
-	get_reserved_qty_for_so,
-)
-from erpnext.stock.stock_ledger import NegativeStockError, get_previous_sle, get_valuation_rate
-from erpnext.stock.utils import get_bin, get_incoming_rate
+
+def on_submit(self, method):
+	if self.work_order:
+		work_order = frappe.get_doc("Work Order", self.work_order)
+		pending_finish = update_work_order_pending_finish_qty(work_order)
+		work_order.db_set("pending_finish", pending_finish)
 
 
 class FinishedGoodError(frappe.ValidationError):
 	pass
-
-
-class IncorrectValuationRateError(frappe.ValidationError):
+		
+class FinishedGoodError(frappe.ValidationError):
 	pass
 
 
-class DuplicateEntryForWorkOrderError(frappe.ValidationError):
-	pass
-
-
-class OperationsNotCompleteError(frappe.ValidationError):
-	pass
-
-
-class MaxSampleAlreadyRetainedError(frappe.ValidationError):
-	pass
-
-
-from erpnext.controllers.stock_controller import StockController
-from erpnext.stock.doctype.stock_entry.stock_entry import StockEntry
-
-form_grid_templates = {"items": "templates/form_grid/stock_entry_grid.html"}
 
 class CustomStockEntry(StockEntry):
 	def check_if_operations_completed(self):
@@ -200,7 +154,7 @@ class CustomStockEntry(StockEntry):
 		):
 			bom_items = self.get_bom_raw_materials(finished_item_qty)
 			outgoing_items_cost = sum([flt(row.qty) * flt(row.rate) for row in bom_items.values()])
-		if finished_item_qty == 0:
-			frappe.throw("Please Completed the further Operations.")
+		if finished_item_qty <= 0:
+			frappe.throw("Please recheck the finish quantity or process loss quantity. There is no finish quantity left after considering the process loss quantity.")
 		return flt((outgoing_items_cost - scrap_items_cost) / finished_item_qty)
 
