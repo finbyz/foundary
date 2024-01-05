@@ -22,6 +22,38 @@ class FinishedGoodError(frappe.ValidationError):
 
 
 class CustomStockEntry(StockEntry):
+	def validate(self):
+		super().validate()
+
+		if self.stock_entry_type == "Manufacture" and self.bom_no:
+			self.update_valuation_of_scrap_quantity()
+	
+	def update_valuation_of_scrap_quantity(self):
+		total_outgoing_value = self.total_outgoing_value
+		scrap_item_value = 0
+		finished_item = frappe.db.get_value("BOM", self.bom_no, "item")
+		finished_item_qty = 0
+
+		for row in self.items:
+			if row.is_scrap_item and row.item_code != finished_item:
+				scrap_item_value += row.amount
+			
+			if row.item_code == finished_item:
+				finished_item_qty += row.qty
+		
+		net_outgoing = total_outgoing_value - scrap_item_value
+		rate = net_outgoing / finished_item_qty
+
+		for row in self.items:
+			if row.item_code == finished_item:
+				row.allow_zero_valuation_rate = 0
+				row.basic_rate = rate
+				row.valuation_rate = row.basic_rate - row.additional_cost
+		
+		self.update_valuation_rate()
+		self.set_total_incoming_outgoing_value()
+		self.set_total_amount()
+
 	def check_if_operations_completed(self):
 			"""Check if Time Sheets are completed against before manufacturing to capture operating costs."""
 			prod_order = frappe.get_doc("Work Order", self.work_order)
