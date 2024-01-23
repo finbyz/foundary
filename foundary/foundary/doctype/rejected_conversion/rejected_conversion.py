@@ -63,7 +63,7 @@ class RejectedConversion(Document):
 				continue
 
 			se_doc = frappe.new_doc("Stock Entry")
-			se_doc.naming_series = f"A{se_doc.naming_series}"
+			se_doc.naming_series = "ARPACK-"
 			se_doc.company = self.company
 			se_doc.stock_entry_type = "Repack"
 			se_doc.purpose = "Repack"
