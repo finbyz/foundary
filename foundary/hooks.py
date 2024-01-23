@@ -138,13 +138,13 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 #	"all": [
 #		"foundary.tasks.all"
 #	],
-#	"daily": [
-#		"foundary.tasks.daily"
-#	],
+	# "daily": [
+	# 	"foundary.foundary.scheduler.repack_scrap_item.repack_stock_entry"
+	# ],
 #	"hourly": [
 #		"foundary.tasks.hourly"
 #	],
@@ -154,7 +154,7 @@ doc_events = {
 #	"monthly": [
 #		"foundary.tasks.monthly"
 #	],
-# }
+}
 
 # Testing
 # -------

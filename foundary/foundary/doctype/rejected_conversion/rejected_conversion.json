@@ -1,0 +1,102 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-19 14:20:39.896713",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "section_break_y9jno",
+  "scrap_rejected_warehouse",
+  "scrap_target_warehouse",
+  "column_break_1gmq7",
+  "scrap_item",
+  "section_break_2ayng",
+  "get_items",
+  "item"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "get_items",
+   "fieldtype": "Button",
+   "label": "Get Items"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Table",
+   "label": "Item",
+   "options": "Rejected Conversion Item"
+  },
+  {
+   "fieldname": "scrap_rejected_warehouse",
+   "fieldtype": "Link",
+   "label": " Scrap Rejected Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "column_break_1gmq7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "scrap_item",
+   "fieldtype": "Link",
+   "label": "Scrap Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "section_break_2ayng",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "scrap_target_warehouse",
+   "fieldtype": "Link",
+   "label": "Scrap Target Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "section_break_y9jno",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-01-22 14:39:58.445178",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "Rejected Conversion",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Stock Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

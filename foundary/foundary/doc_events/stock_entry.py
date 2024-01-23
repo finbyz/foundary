@@ -187,4 +187,3 @@ class CustomStockEntry(StockEntry):
 		if finished_item_qty <= 0:
 			frappe.throw("Please recheck the finish quantity or process loss quantity. There is no finish quantity left after considering the process loss quantity.")
 		return flt((outgoing_items_cost - scrap_items_cost) / finished_item_qty)
-
