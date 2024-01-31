@@ -6,11 +6,43 @@ from erpnext.stock.doctype.stock_entry.stock_entry import StockEntry
 from frappe.utils import (cint,flt)
 
 
+def validate(self,method):
+	update_additional_cost(self)
+
 def on_submit(self, method):
 	if self.work_order:
 		work_order = frappe.get_doc("Work Order", self.work_order)
 		pending_finish = update_work_order_pending_finish_qty(work_order)
 		work_order.db_set("pending_finish", pending_finish)
+
+def update_additional_cost(self):
+	if self.purpose == "Manufacture" and self.bom_no:
+		bom = frappe.get_doc("BOM",self.bom_no)
+		abbr = frappe.db.get_value("Company",self.company,'abbr')
+		
+		if self.is_new() and not self.amended_from:
+			if bom.additional_cost:
+				for d in bom.additional_cost:	
+					self.append('additional_costs', {
+						'expense_account': 'Expenses Included In Valuation - {}'.format(abbr),
+						'description': d.description,
+						'qty': flt(self.fg_completed_qty),
+						'rate': abs(d.rate),
+						'amount':  abs(d.rate)* flt(self.fg_completed_qty),
+						'base_amount':  abs(d.rate)* flt(self.fg_completed_qty)
+					})
+		else:
+			for row in self.additional_costs:
+				if bom.additional_cost:
+					for d in bom.additional_cost:
+						if row.description == d.description:
+							row.rate = abs(d.rate)
+							row.qty = flt(self.fg_completed_qty)
+							if row.rate and row.qty:
+								row.amount = abs(d.rate)* flt(self.fg_completed_qty)
+								row.base_amount = abs(d.rate)*flt(self.fg_completed_qty)
+		self.db_set('total_additional_costs',sum([row.amount for row in self.additional_costs]))
+
 
 
 class FinishedGoodError(frappe.ValidationError):

@@ -30,8 +30,11 @@ app_license = "MIT"
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-doctype_js = {"Work Order" : "public/doc_js/work_order.js",
-              "Job Card":"public/doc_js/job_card.js"}
+doctype_js = {
+    "Work Order" : "public/doc_js/work_order.js",
+    "Job Card":"public/doc_js/job_card.js",
+    "BOM": "public/doc_js/bom.js",
+}
 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -131,14 +134,18 @@ doc_events = {
         "on_update_after_submit": "foundary.foundary.doc_events.work_order.on_update_after_submit"
 	},
     "Stock Entry": {
+        "validate" : "foundary.foundary.doc_events.stock_entry.validate",
         "on_submit": "foundary.foundary.doc_events.stock_entry.on_submit"
+	},
+    "BOM": {
+        "before_validate": "foundary.foundary.doc_events.Bom.before_validate"
 	}
 }
 
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {
+# scheduler_events = {
 #	"all": [
 #		"foundary.tasks.all"
 #	],
@@ -154,7 +161,7 @@ scheduler_events = {
 #	"monthly": [
 #		"foundary.tasks.monthly"
 #	],
-}
+# }
 
 # Testing
 # -------
