@@ -1,8 +1,26 @@
 import frappe
 
+def validate(self,method):
+	job_rejections_qty(self)
+
 def on_update(self, method):
 	if method == "submit":
 		validate_update_qty(self)
+
+def on_update_after_submit(self,method):
+	job_rejections_qty(self)
+
+def job_rejections_qty(self):
+	sum = 0
+	if self.rejections:
+		for x in self.rejections:
+			sum += int(x.qty)
+		if self.process_loss_qty:
+			if sum > self.process_loss_qty:
+				frappe.throw("Quantity in rejections cannot be greater then Process Loss Quantity")
+			if sum < self.process_loss_qty:
+				frappe.throw("Quantity in rejections cannot be less then Process Loss Quantity")
+
 
 
 def validate_update_qty(self):

@@ -10,9 +10,9 @@ frappe.ui.form.on('Job Card',  {
 
     }
 });
-frappe.ui.form.on('Job Card Rejections',  {
-    rejections_add: function(frm,cdt,cdn) {
-        frappe.model.set_value(cdt, cdn, 'qty', frm.doc.process_loss_qty);
-        frm.refresh_field('rejections');
-    }
-});
+// frappe.ui.form.on('Job Card Rejections',  {
+//     rejections_add: function(frm,cdt,cdn) {
+//         frappe.model.set_value(cdt, cdn, 'qty', frm.doc.process_loss_qty);
+//         frm.refresh_field('rejections');
+//     }
+// });

@@ -127,7 +127,9 @@ override_doctype_class = {
 
 doc_events = {
     "Job Card": {
-		"on_update": "foundary.foundary.doc_events.job_card.on_update"
+        "validate": "foundary.foundary.doc_events.job_card.validate",
+		"on_update": "foundary.foundary.doc_events.job_card.on_update",
+        "on_update_after_submit" : "foundary.foundary.doc_events.job_card.on_update_after_submit"
 	},
 	"Work Order": {
         "on_update": "foundary.foundary.doc_events.work_order.on_update",
