@@ -34,6 +34,7 @@ doctype_js = {
     "Work Order" : "public/doc_js/work_order.js",
     "Job Card":"public/doc_js/job_card.js",
     "BOM": "public/doc_js/bom.js",
+    "Quality Inspection": "public/doc_js/quality_inspection.js"
 }
 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
@@ -237,3 +238,7 @@ doc_events = {
 from erpnext.manufacturing.report.job_card_summary import job_card_summary
 from foundary.foundary.report.job_card_summary import execute
 job_card_summary.execute = execute
+
+from erpnext.stock.doctype.quality_inspection_template import quality_inspection_template
+from foundary.foundary.doc_events.quality_inspection_template import get_template_details
+quality_inspection_template.get_template_details = get_template_details
