@@ -13,6 +13,7 @@ def get_template_details(template):
 			"value",
 			"acceptance_formula",
 			"numeric",
+			"remarks",
 			"test_method",
 			"formula_based_criteria",
 			"min_value",
