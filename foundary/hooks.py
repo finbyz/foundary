@@ -142,7 +142,10 @@ doc_events = {
 	},
     "BOM": {
         "before_validate": "foundary.foundary.doc_events.Bom.before_validate"
-	}
+	},
+    "Quality Inspection":{
+        "before_validate" : "foundary.foundary.doc_events.quality_inspection.before_validate"
+    }
 }
 
 # Scheduled Tasks
