@@ -12,7 +12,7 @@ frappe.ui.form.on('Job Card',  {
 });
 // frappe.ui.form.on('Job Card Rejections',  {
 //     rejections_add: function(frm,cdt,cdn) {
-//         frappe.model.set_value(cdt, cdn, 'qty', frm.doc.process_loss_qty);
+//         frappe.model.set_value(cdt, cdn, 'rejection_percentage', qty/frm.doc.total_completed_qty);
 //         frm.refresh_field('rejections');
 //     }
 // });
