@@ -49,13 +49,14 @@
    "fieldname": "rejection_percentage",
    "fieldtype": "Percent",
    "in_list_view": 1,
-   "label": "Rejection %"
+   "label": "Rejection %",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-05 15:07:37.345625",
+ "modified": "2024-03-06 16:21:40.893321",
  "modified_by": "Administrator",
  "module": "Foundary",
  "name": "Job Card Rejections",

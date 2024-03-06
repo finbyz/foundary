@@ -130,7 +130,7 @@ doc_events = {
     "Job Card": {
         "validate": "foundary.foundary.doc_events.job_card.validate",
 		"on_update": "foundary.foundary.doc_events.job_card.on_update",
-        "on_update_after_submit" : "foundary.foundary.doc_events.job_card.on_update_after_submit"
+        "before_update_after_submit" : "foundary.foundary.doc_events.job_card.on_update_after_submit"
 	},
 	"Work Order": {
         "on_update": "foundary.foundary.doc_events.work_order.on_update",
