@@ -12,8 +12,8 @@ def on_update_after_submit(self,method):
 
 def job_rejections_qty(self):
 	sum = 0
-	rejected = 0
-	self.total_rejected_percentage = (self.process_loss_qty/self.for_quantity)*100
+	if self.process_loss_qty and self.for_quantity:
+		self.total_rejected_percentage = (self.process_loss_qty/self.for_quantity)*100
 	if self.rejections:
 		for x in self.rejections:
 			sum += int(x.qty)
