@@ -7,7 +7,6 @@ frappe.ui.form.on('Job Card',  {
         child.stock_qty = frm.doc.process_loss_qty; 
     },
     rejections_add: function(frm) {
-
     }
 });
 // frappe.ui.form.on('Job Card Rejections',  {
