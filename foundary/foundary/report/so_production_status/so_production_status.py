@@ -1,6 +1,9 @@
 import frappe
 from frappe import _
+import sys
 
+# Increase the maximum recursion depth
+sys.setrecursionlimit(10000)
 
 def execute(filters=None):
     columns = get_column_data()
