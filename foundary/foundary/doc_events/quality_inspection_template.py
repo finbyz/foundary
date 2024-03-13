@@ -1,4 +1,3 @@
-
 import frappe
 from frappe.model.document import Document
 
@@ -16,6 +15,7 @@ def get_template_details(template):
 			"remarks",
 			"test_method",
 			"formula_based_criteria",
+			"special_characteristics",
 			"min_value",
 			"max_value",
 		],

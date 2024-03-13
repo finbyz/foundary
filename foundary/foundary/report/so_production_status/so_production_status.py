@@ -2,8 +2,6 @@ import frappe
 from frappe import _
 import sys
 
-# Increase the maximum recursion depth
-sys.setrecursionlimit(10000)
 
 def execute(filters=None):
     columns = get_column_data()
@@ -142,50 +140,47 @@ def get_all_the_warehouse_list(filters):
 
 # gettting nested child table details
 def get_child_data_with_respect_to_item_code(item_code, item_all_child_warehouse_stoock, bin_data):
+    if str(item_code) not in item_all_child_warehouse_stoock:
+        item_all_child_warehouse_stoock[str(item_code)] = {}
 
+    stack = [(item_code, [])]  
+    memo = {} 
 
-    if str(item_code) in item_all_child_warehouse_stoock.keys():
-        return item_all_child_warehouse_stoock[str(item_code)]
-    
-    bom_data = frappe.db.sql(
-        """
-        SELECT bom_item.item_code as item_code, bom_item.item_name as item_name
-        FROM `tabBOM` bom
-        INNER JOIN `tabBOM Item` bom_item ON bom.name = bom_item.parent
-        WHERE bom.item = %s AND bom.is_default = 1 AND bom.docstatus = 1
-        """,
-        (item_code,),
-        as_dict=True,
-    )
+    while stack:
+        current_item, parent_items = stack.pop()
 
+        if current_item in memo:
+            for key, value in memo[current_item].items():
+                item_all_child_warehouse_stoock[str(item_code)][key] = item_all_child_warehouse_stoock[str(item_code)].get(key, 0) + value
+            continue
 
-    if len(bom_data) == 0:
-        return {}
-    
-    #declaring dict for all warehouse data
-    parent_dict={}
-
-    # gettting nested child item_bom with respect to parent
-    for item_data in bom_data:
-        dict_data = get_child_data_with_respect_to_item_code(
-            item_data.item_code, item_all_child_warehouse_stoock, bin_data
+        bom_data = frappe.db.sql(
+            """
+            SELECT bom_item.item_code as item_code, bom_item.item_name as item_name
+            FROM `tabBOM` bom
+            INNER JOIN `tabBOM Item` bom_item ON bom.name = bom_item.parent
+            WHERE bom.item = %s AND bom.is_default = 1 AND bom.docstatus = 1
+            """,
+            (current_item,),
+            as_dict=True,
         )
 
+        if not bom_data:
+            memo[current_item] = {}
+            continue
 
+        current_item_warehouse_data = {}
         for b_data in bin_data:
-            if b_data.item_code == item_code:
-                fieldname = f"{b_data.warehouse.replace('-', '').replace(' ', '_')}"
-                if fieldname.lower() in parent_dict.keys():
-                    parent_dict[fieldname.lower()]+=float(b_data.actual_qty)
-                else:
-                  parent_dict.update({fieldname.lower(): b_data.actual_qty})
+            if b_data.item_code == current_item:
+                fieldname = f"{b_data.warehouse.replace('-', '').replace(' ', '_')}".lower()
+                current_item_warehouse_data[fieldname] = b_data.actual_qty
 
-        for key, value in dict_data.items():
-            if key.lower() in parent_dict.keys():
-                parent_dict[key.lower()] += float(value)
-            else:
-                parent_dict.update({key.lower(): float(value)})
+        for item_data in bom_data:
+            stack.append((item_data.item_code, parent_items + [current_item]))
 
-    item_all_child_warehouse_stoock.update({str(item_code): parent_dict})
+        memo[current_item] = current_item_warehouse_data
 
-    return parent_dict
+        for key, value in current_item_warehouse_data.items():
+            item_all_child_warehouse_stoock[str(item_code)][key] = item_all_child_warehouse_stoock[str(item_code)].get(key, 0) + value
+
+    return item_all_child_warehouse_stoock[str(item_code)]
