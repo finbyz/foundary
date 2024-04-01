@@ -42,6 +42,7 @@ class RejectedConversion(Document):
 		
 		self.company = None
 		self.item = []
+		frappe.msgprint("Rejected Items Repacked Successfully")
 
 	def repack_stock_entry(self):
 		branch = ""
