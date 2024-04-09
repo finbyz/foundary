@@ -1,0 +1,33 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-04-05 15:44:50.302003",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "RBD Engineers",
+ "modified": "2024-04-05 15:51:02.397027",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "Rejection Analysis",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Job Card",
+ "report_name": "Rejection Analysis",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Manufacturing User"
+  },
+  {
+   "role": "Manufacturing Manager"
+  }
+ ]
+}
