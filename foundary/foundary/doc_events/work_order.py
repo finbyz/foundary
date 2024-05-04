@@ -1,4 +1,4 @@
-import frappe
+from frappe.utils import flt
 
 
 def on_update(self, method):
