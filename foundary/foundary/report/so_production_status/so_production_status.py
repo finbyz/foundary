@@ -26,6 +26,12 @@ def get_column_data():
             "options": "Item",
         },
         {
+            "fieldname": "delivery_date",
+            "label": _("Delivery Date"),
+            "fieldtype": "Date",
+            "width": 100,
+        },
+        {
             "fieldname": "so_qty",
             "label": _("SO Qty"),
             "fieldtype": "Float",
@@ -62,7 +68,7 @@ def get_data(filters, columns):
 
     sales_order_data = frappe.db.sql(
         f"""
-        SELECT so.name as sales_order, soi.item_code as item_code, soi.qty as so_qty, soi.delivered_qty as delivered_qty, soi.item_name as item_name
+        SELECT so.name as sales_order, soi.item_code as item_code,so.delivery_date, soi.qty as so_qty, soi.delivered_qty as delivered_qty, soi.item_name as item_name
         FROM `tabSales Order` so
         INNER JOIN `tabSales Order Item` soi ON so.name = soi.parent
         WHERE so.company = "{filters.get('company')}" AND so.status NOT IN ("Completed", "Closed", "Cancelled") {condition}

@@ -21,7 +21,7 @@ frappe.query_reports["Rejection Analysis"] = {
 			"label": __("From Date"),
 			"fieldtype": "Date",
 			"width": "80",
-			"default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
+			"default": frappe.datetime.add_days(frappe.datetime.get_today(), -7)
 		},
 		{
 			"fieldname":"to_date",

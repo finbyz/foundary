@@ -1,3 +1,6 @@
+from frappe.utils import flt
+
+
 def on_update(self, method):
 	self.pending_finish = update_work_order_pending_finish_qty(self)
 	
@@ -15,4 +18,4 @@ def update_work_order_pending_finish_qty(self):
 		process_loss_qty += row.process_loss_qty
 	
 
-	return last_completed_qty + process_loss_qty - self.produced_qty - self.process_loss_qty
+	return flt(last_completed_qty) + flt(process_loss_qty) - flt(self.produced_qty) - flt(self.process_loss_qty)

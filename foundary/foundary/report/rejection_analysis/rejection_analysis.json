@@ -1,5 +1,5 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "columns": [],
  "creation": "2024-04-05 15:44:50.302003",
  "disable_prepared_report": 0,
@@ -10,7 +10,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "RBD Engineers",
- "modified": "2024-04-05 15:51:02.397027",
+ "modified": "2024-05-03 12:32:22.297439",
  "modified_by": "Administrator",
  "module": "Foundary",
  "name": "Rejection Analysis",
