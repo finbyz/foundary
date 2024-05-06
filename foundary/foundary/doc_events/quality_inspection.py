@@ -16,7 +16,7 @@ def update_manual_inspection(self):
 	if not self.quality_inspection_template:
 		return
 
-	self.set("readings", [])
+	# self.set("readings", [])
 	parameters = get_template_details(self.quality_inspection_template)
 	for d in parameters:
 		child = self.append("readings", {})
