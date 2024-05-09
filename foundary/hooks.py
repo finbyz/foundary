@@ -34,7 +34,8 @@ doctype_js = {
     "Work Order" : "public/doc_js/work_order.js",
     "Job Card":"public/doc_js/job_card.js",
     "BOM": "public/doc_js/bom.js",
-    "Quality Inspection": "public/doc_js/quality_inspection.js"
+    "Quality Inspection": "public/doc_js/quality_inspection.js",
+    "Payment Entry": "public/doc_js/payment_entry.js",
 }
 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
@@ -110,6 +111,7 @@ doctype_js = {
 override_doctype_class = {
 	"BOM": "foundary.override.override_bom.CustomBOM",
     "Stock Entry": "foundary.foundary.doc_events.stock_entry.CustomStockEntry",
+
     # "Job Card": "foundary.foundary.doc_events.job_card.CustomJobCard",
     # "Work Order": "foundary.foundary.doc_events.work_order.CustomWorkOrder"
 }
@@ -145,7 +147,7 @@ doc_events = {
 	},
     "Quality Inspection":{
         "before_validate" : "foundary.foundary.doc_events.quality_inspection.before_validate"
-    }
+    }, 
 }
 
 # Scheduled Tasks
