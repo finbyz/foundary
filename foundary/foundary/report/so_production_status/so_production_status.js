@@ -18,6 +18,12 @@ frappe.query_reports["SO Production Status"] = {
 			fieldtype: "Link",
 			options:"Item"
 		},
+		{
+			fieldname: "delivery_upto",
+			label: __("Delivery Upto"),
+			fieldtype: "Date",
+			default: frappe.datetime.get_today(),
+		},
 	]
 	// ],
 	// "treeView": true,

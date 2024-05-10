@@ -62,6 +62,8 @@ def get_data(filters, columns):
     condition = ""
     if filters.get("item_code"):
         condition += f"AND soi.item_code = '{filters.get('item_code')}'"
+    if filters.get("delivery_upto"):
+        condition += f"AND so.delivery_date <= '{filters.get('delivery_upto')}'"
 
     # initializing dictionary for ignoring maximum depth limit
     item_all_child_warehouse_stoock = {}
@@ -72,6 +74,7 @@ def get_data(filters, columns):
         FROM `tabSales Order` so
         INNER JOIN `tabSales Order Item` soi ON so.name = soi.parent
         WHERE so.company = "{filters.get('company')}" AND so.status NOT IN ("Completed", "Closed", "Cancelled") {condition}
+        ORDER BY so.delivery_date ASC
     """,
         as_dict=True,
     )
