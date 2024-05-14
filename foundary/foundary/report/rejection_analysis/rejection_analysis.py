@@ -16,21 +16,13 @@ def execute(filters=None):
 	return columns, data, None, chart
 
 def get_data(filters):
+	conditions = ""
 	if filters.get("from_date") and filters.get("to_date"):
-		from_date = filters.get("from_date")
-		from_date_obj = datetime.strptime(from_date, '%Y-%m-%d')
-		formatted_date = from_date_obj.strftime('%Y-%m-%d')
-		to_date = filters.get("to_date")
-		to_date_obj = datetime.strptime(to_date, '%Y-%m-%d')
-		formatted_to_date = to_date_obj.strftime('%Y-%m-%d')
-		conditions = "and Date(jc.creation) between '{0}' and '{1}'".format(formatted_date, formatted_to_date)
+		conditions = " and Date(jc.creation) between '{0}' and '{1}'".format(filters.get("from_date"), filters.get("to_date"))
 	if filters.get("item_group"):
 		conditions += " and i.item_group = '{0}'".format(filters.get("item_group"))
 	if filters.get("company"):
 		conditions += " and jc.company = '{0}'".format(filters.get("company"))
-	else:
-		conditions = ""
-		
 	job_card_data = frappe.db.sql(f""" 
 	SELECT
 		jc.production_item AS item,
@@ -116,20 +108,13 @@ def get_data(filters):
 	return columns, data
 
 def get_chart_data(filters):
+	conditions = ""
 	if filters.get("from_date") and filters.get("to_date"):
-		from_date = filters.get("from_date")
-		from_date_obj = datetime.strptime(from_date, '%Y-%m-%d')
-		formatted_date = from_date_obj.strftime('%Y-%m-%d')
-		to_date = filters.get("to_date")
-		to_date_obj = datetime.strptime(to_date, '%Y-%m-%d')
-		formatted_to_date = to_date_obj.strftime('%Y-%m-%d')
-		conditions = "and Date(jc.creation) between '{0}' and '{1}'".format(formatted_date, formatted_to_date)
+		conditions = " and Date(jc.creation) between '{0}' and '{1}'".format(filters.get("from_date"), filters.get("to_date"))
 	if filters.get("item_group"):
 		conditions += " and i.item_group = '{0}'".format(filters.get("item_group"))
 	if filters.get("company"):
 		conditions += " and jc.company = '{0}'".format(filters.get("company"))
-	else:
-		conditions = ""
 		
 	job_card_data = frappe.db.sql(f""" 
 	SELECT

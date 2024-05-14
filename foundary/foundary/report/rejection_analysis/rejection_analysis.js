@@ -5,16 +5,17 @@
 frappe.query_reports["Rejection Analysis"] = {
 	"filters": [
 		{
-			fieldname: 'item_group',
-			label: __('Item Group'),
-			fieldtype: 'Link',
-			options: 'Item Group',
-		},
-		{
 			fieldname: 'company',
 			label: __('Company'),
 			fieldtype: 'Link',
 			options: 'Company',
+			default: frappe.defaults.get_user_default("Company"),
+		},
+		{
+			fieldname: 'item_group',
+			label: __('Item Group'),
+			fieldtype: 'Link',
+			options: 'Item Group',
 		},
 		{
 			"fieldname":"from_date",
