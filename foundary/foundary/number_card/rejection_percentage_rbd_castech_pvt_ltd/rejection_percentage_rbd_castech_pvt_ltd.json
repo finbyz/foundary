@@ -1,0 +1,22 @@
+{
+ "creation": "2024-05-30 14:37:36.436933",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "filters_config": "[\n{\nfieldname: \"from_date\",\n\tlabel: __(\"From Date\"),\n\tfieldtype: \"Date\",\n\tdefault: frappe.datetime.add_days(frappe.datetime.get_today(), -7)\n},\n{\n\t\"fieldname\":\"to_date\",\n\t\"label\": __(\"To Date\"),\n\t\"fieldtype\": \"Date\",\n\t\"default\": frappe.datetime.get_today()\n}\n]",
+ "filters_json": "{\"from_date\":\"2024-05-23\",\"to_date\":\"2024-05-30\"}",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Rejection Percentage RBD Castech Pvt Ltd",
+ "method": "foundary.foundary.override_whitelisted.override_whitelisted.rejection_percentage.get_rejection_percentage_for_number_card_castech",
+ "modified": "2024-05-30 14:40:49.084257",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "Rejection Percentage RBD Castech Pvt Ltd",
+ "owner": "Administrator",
+ "report_function": "Sum",
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Daily",
+ "type": "Custom"
+}
