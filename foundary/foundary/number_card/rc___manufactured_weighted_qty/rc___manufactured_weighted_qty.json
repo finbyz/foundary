@@ -1,0 +1,23 @@
+{
+ "creation": "2024-05-05 19:31:34.200611",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "dynamic_filters_json": "{}",
+ "filters_json": "{\"company\":\"RBD Castech Pvt Ltd\",\"from_date\":\"2024-05-28\",\"to_date\":\"2024-06-04\"}",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "RC - Manufactured Weighted Qty",
+ "modified": "2024-06-04 16:35:21.213226",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "RC - Manufactured Weighted Qty",
+ "owner": "Administrator",
+ "report_field": "production_weight",
+ "report_function": "Sum",
+ "report_name": "Rejection Analysis",
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Daily",
+ "type": "Report"
+}

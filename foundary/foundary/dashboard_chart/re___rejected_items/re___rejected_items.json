@@ -1,0 +1,33 @@
+{
+ "chart_name": "RE - Rejected Items",
+ "chart_type": "Report",
+ "creation": "2024-05-09 10:37:51.109498",
+ "custom_options": "",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "dynamic_filters_json": "{}",
+ "filters_json": "{\"company\":\"RBD Engineers Pvt Ltd\",\"from_date\":\"2024-05-28\",\"to_date\":\"2024-06-04\"}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "modified": "2024-06-04 16:33:41.100604",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "RE - Rejected Items",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "Rejection Analysis",
+ "roles": [],
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Pie",
+ "use_report_chart": 1,
+ "x_field": "item",
+ "y_axis": [
+  {
+   "y_field": "total_rejected"
+  }
+ ]
+}

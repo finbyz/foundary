@@ -1,0 +1,32 @@
+{
+ "chart_name": "RC - Rejected Items",
+ "chart_type": "Report",
+ "creation": "2024-05-16 14:07:42.314659",
+ "custom_options": "{\"x_field\": \"item\", \"chart_type\": \"Bar\", \"y_axis_fields\": [{\"idx\": 1, \"__islocal\": true, \"y_field\": \"total_rejected\", \"name\": \"row 1\"}], \"y_fields\": [\"total_rejected\"], \"colors\": [null]}",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "filters_json": "{\"company\":\"RBD Castech Pvt Ltd\",\"from_date\":\"2024-05-28\",\"to_date\":\"2024-06-04\"}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "modified": "2024-06-04 16:33:49.707884",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "RC - Rejected Items",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "Rejection Analysis",
+ "roles": [],
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Pie",
+ "use_report_chart": 0,
+ "x_field": "item",
+ "y_axis": [
+  {
+   "y_field": "total_rejected"
+  }
+ ]
+}

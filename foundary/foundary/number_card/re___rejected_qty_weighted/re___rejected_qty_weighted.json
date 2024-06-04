@@ -1,0 +1,22 @@
+{
+ "creation": "2024-05-14 12:46:09.081321",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "filters_json": "{\"company\":\"RBD Engineers Pvt Ltd\",\"from_date\":\"2024-05-28\",\"to_date\":\"2024-06-04\"}",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "label": "RE - Rejected Qty Weighted",
+ "modified": "2024-06-04 16:34:59.411260",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "RE - Rejected Qty Weighted",
+ "owner": "Administrator",
+ "report_field": "rejected_qty_weight",
+ "report_function": "Sum",
+ "report_name": "Rejection Analysis",
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Daily",
+ "type": "Report"
+}

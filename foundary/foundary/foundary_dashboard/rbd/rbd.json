@@ -1,0 +1,58 @@
+{
+ "cards": [
+  {
+   "card": "Rejection Percentage RBD Castech Pvt Ltd"
+  },
+  {
+   "card": "RE - Manufactured Weighted Qty"
+  },
+  {
+   "card": "RE - Rejected Qty Weighted"
+  },
+  {
+   "card": "REPL Sales"
+  },
+  {
+   "card": "Rejection Percentage RBD Engineers Pvt Ltd"
+  },
+  {
+   "card": "RC - Manufactured Weighted Qty"
+  },
+  {
+   "card": "RC - Rejected Qty Weighted"
+  },
+  {
+   "card": "RCPL Sales"
+  }
+ ],
+ "charts": [
+  {
+   "chart": "RE - Top Customer",
+   "width": "Half"
+  },
+  {
+   "chart": "RC - Top Customer",
+   "width": "Half"
+  },
+  {
+   "chart": "RE - Rejected Items",
+   "width": "Half"
+  },
+  {
+   "chart": "RC - Rejected Items",
+   "width": "Half"
+  }
+ ],
+ "creation": "2024-05-05 19:30:43.680534",
+ "dashboard_name": "RBD",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2024-06-04 16:36:27.068951",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "RBD",
+ "owner": "Administrator"
+}
