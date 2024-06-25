@@ -37,7 +37,7 @@ def get_data(filters):
 	JOIN 
 		`tabItem` i ON jc.production_item = i.item_code
 	WHERE
-		jc.status = 'Completed'{conditions}
+		jc.status = 'Completed'{conditions} and jc.docstatus = 1
 	GROUP BY 
 		jc.production_item
 	ORDER BY
@@ -55,7 +55,7 @@ def get_data(filters):
 		`tabJob Card` jc ON jcr.parent = jc.name	
 	JOIN `tabItem` i ON jc.production_item = i.item_code					  
 	WHERE
-		jc.status = 'Completed'{conditions}
+		jc.status = 'Completed'{conditions} and jc.docstatus = 1
 	GROUP BY 
 		jc.production_item,jcr.reason_id
 	ORDER BY
@@ -123,7 +123,7 @@ def get_chart_data(filters):
 	FROM 
 		`tabJob Card` jc
 	WHERE
-		jc.status = 'Completed'{conditions}
+		jc.status = 'Completed'{conditions} and jc.docstatus = 1
 	GROUP BY 
 		jc.production_item
 	ORDER BY
