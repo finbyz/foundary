@@ -24,6 +24,13 @@ frappe.query_reports["SO Production Status"] = {
 			fieldtype: "Date",
 			default: frappe.datetime.get_today(),
 		},
+		{
+			fieldname: "customer",
+			label: __("Customer Name"),
+			fieldtype: "Link",
+			options: 'Customer',
+			default: frappe.defaults.get_user_default("Customer"),
+		},
 	]
 	// ],
 	// "treeView": true,

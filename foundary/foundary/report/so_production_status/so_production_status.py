@@ -64,6 +64,8 @@ def get_data(filters, columns):
         condition += f"AND soi.item_code = '{filters.get('item_code')}'"
     if filters.get("delivery_upto"):
         condition += f"AND so.delivery_date <= '{filters.get('delivery_upto')}'"
+    if filters.get("customer"):
+        condition += f"AND so.customer = '{filters.get('customer')}'"
 
     # initializing dictionary for ignoring maximum depth limit
     item_all_child_warehouse_stoock = {}
