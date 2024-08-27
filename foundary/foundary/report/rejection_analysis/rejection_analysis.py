@@ -23,18 +23,27 @@ def get_data(filters):
 		conditions += " and i.item_group = '{0}'".format(filters.get("item_group"))
 	if filters.get("company"):
 		conditions += " and jc.company = '{0}'".format(filters.get("company"))
+	
+	jc_filters = {"docstatus": 1, "status": "Completed"}
+	if filters.get("from_date") and filters.get("to_date"):
+		jc_filters["creation"] = ["between", [filters.get("from_date"), filters.get("to_date")]]
+	if filters.get("company"):
+		jc_filters["company"] = filters.get("company")
+	if filters.get("item_group"):
+		jc_filters["item_group"] = filters.get("item_group")
+
+	wo_names = frappe.db.get_all("Job Card", filters=jc_filters, fields=["distinct(work_order) as work_order"], pluck="work_order")
+
 	job_card_data = frappe.db.sql(f""" 
 	SELECT
 		jc.production_item AS item,
-		SUM(jc.for_quantity) AS qty_to_manufacture,
-		SUM(jc.total_completed_qty) AS manufactured_qty,
 		SUM(jc.process_loss_qty) AS total_rejected,
 		SUM(jc.process_loss_qty * i.weight_per_unit) AS rejected_qty_weight,
 		SUM(jc.total_completed_qty * i.weight_per_unit) AS production_weight,
 		Sum(jc.process_loss_qty * i.weight_per_unit) / Sum(jc.total_completed_qty * i.weight_per_unit) * 100 AS weight_rejected_percentage
 	FROM 
 		`tabJob Card` jc
-	JOIN 
+	JOIN
 		`tabItem` i ON jc.production_item = i.item_code
 	WHERE
 		jc.status = 'Completed'{conditions} and jc.docstatus = 1
@@ -44,12 +53,21 @@ def get_data(filters):
 		jc.creation DESC
 	""",as_dict=True)
 
+	wo_data = frappe.db.get_all("Work Order", filters={"name": ["in", wo_names]}, fields=["production_item", "sum(qty) as qty_to_manufacture", "sum(produced_qty) as manufactured_qty"], group_by="production_item")
+	wo_map = {row.production_item: {"manufactured_qty": row.manufactured_qty, "qty_to_manufacture": row.qty_to_manufacture} for row in wo_data}
+	for row in job_card_data:
+		wo = wo_map.get(row.item)
+		if wo:
+			row.update(wo)
+		else:
+			row.update({"qty_to_manufacture": 0, "manufactured_qty": 0})
+
 	job_card_rejection_data = frappe.db.sql(f""" 
 	SELECT
 		jc.production_item AS item,
 		jcr.reason_id,
 		Sum(jcr.qty) as rejected_qty
-	FROM 
+	FROM
 		`tabJob Card Rejections` jcr
 	Left JOIN 
 		`tabJob Card` jc ON jcr.parent = jc.name	
