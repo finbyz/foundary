@@ -72,7 +72,7 @@ def get_data(filters, columns):
 
     sales_order_data = frappe.db.sql(
         f"""
-        SELECT so.name as sales_order, soi.item_code as item_code,so.delivery_date, soi.qty as so_qty, soi.delivered_qty as delivered_qty, soi.item_name as item_name
+        SELECT so.name as sales_order, soi.item_code as item_code,soi.delivery_date, soi.qty as so_qty, soi.delivered_qty as delivered_qty, soi.item_name as item_name
         FROM `tabSales Order` so
         INNER JOIN `tabSales Order Item` soi ON so.name = soi.parent
         WHERE so.company = "{filters.get('company')}" AND so.status NOT IN ("Completed", "Closed", "Cancelled") {condition}
@@ -151,8 +151,7 @@ def get_all_the_warehouse_list(filters):
 
 # gettting nested child table details
 def get_child_data_with_respect_to_item_code(item_code, item_all_child_warehouse_stoock, bin_data):
-    if str(item_code) not in item_all_child_warehouse_stoock:
-        item_all_child_warehouse_stoock[str(item_code)] = {}
+    item_warehouse_stock = {}
 
     stack = [(item_code, [])]  
     memo = {} 
@@ -162,7 +161,7 @@ def get_child_data_with_respect_to_item_code(item_code, item_all_child_warehouse
 
         if current_item in memo:
             for key, value in memo[current_item].items():
-                item_all_child_warehouse_stoock[str(item_code)][key] = item_all_child_warehouse_stoock[str(item_code)].get(key, 0) + value
+                item_warehouse_stock[key] = item_warehouse_stock.get(key, 0) + value
             continue
 
         bom_data = frappe.db.sql(
@@ -192,6 +191,5 @@ def get_child_data_with_respect_to_item_code(item_code, item_all_child_warehouse
         memo[current_item] = current_item_warehouse_data
 
         for key, value in current_item_warehouse_data.items():
-            item_all_child_warehouse_stoock[str(item_code)][key] = item_all_child_warehouse_stoock[str(item_code)].get(key, 0) + value
-
-    return item_all_child_warehouse_stoock[str(item_code)]
+            item_warehouse_stock[key] = item_warehouse_stock.get(key, 0) + value
+    return item_warehouse_stock
