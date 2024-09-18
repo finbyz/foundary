@@ -111,6 +111,7 @@ doctype_js = {
 override_doctype_class = {
 	"BOM": "foundary.override.override_bom.CustomBOM",
     "Stock Entry": "foundary.foundary.doc_events.stock_entry.CustomStockEntry",
+    "Quality Inspection": "foundary.override.quality_inspection.QualityInspection",
 
     # "Job Card": "foundary.foundary.doc_events.job_card.CustomJobCard",
     # "Work Order": "foundary.foundary.doc_events.work_order.CustomWorkOrder"
@@ -244,6 +245,6 @@ from erpnext.manufacturing.report.job_card_summary import job_card_summary
 from foundary.foundary.report.job_card_summary import execute
 job_card_summary.execute = execute
 
-from erpnext.stock.doctype.quality_inspection_template import quality_inspection_template
-from foundary.foundary.doc_events.quality_inspection_template import get_template_details
-quality_inspection_template.get_template_details = get_template_details
+# from erpnext.stock.doctype.quality_inspection_template import quality_inspection_template
+# from foundary.foundary.doc_events.quality_inspection_template import get_template_details
+# quality_inspection_template.get_template_details = get_template_details
