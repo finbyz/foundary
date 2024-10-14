@@ -75,7 +75,7 @@ def get_data(filters):
 	WHERE
 		jc.status = 'Completed'{conditions} and jc.docstatus = 1
 	GROUP BY 
-		jc.production_item,jcr.reason_id
+		jc.production_item, jcr.reason_id
 	ORDER BY
 		jc.creation DESC
 	""",as_dict=True)
@@ -111,7 +111,7 @@ def get_data(filters):
 		unique_data[row.item].update({
 			"item": row.item,"qty_to_manufacture":row.qty_to_manufacture,"manufactured_qty":row.manufactured_qty,
 			"total_rejected":row.total_rejected,"rejected_percentage":str(row.total_rejected/row.qty_to_manufacture*100) + "%",
-			"rejected_qty_weight":row.rejected_qty_weight,"production_weight":row.production_weight,
+			"rejected_qty_weight":round(row.rejected_qty_weight,2),"production_weight":row.production_weight,
 			"weight_rejected_percentage":row.weight_rejected_percentage
 		})
 
