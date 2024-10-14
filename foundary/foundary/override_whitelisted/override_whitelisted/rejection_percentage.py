@@ -38,7 +38,11 @@ def get_rejection_percentage_for_number_card(filters):
     return {
         "value": rejection_percentage,
         "fieldtype": "Percent",
-        "route_options": {"from_date": filters.get("from_date")},
+       "route_options": {
+            "from_date": filters.get("from_date"),
+            "to_date": filters.get("to_date"),
+            "company": "RBD Engineers Pvt Ltd" 
+        },
         "route": ["query-report", "Rejection Analysis"]
     }
 
@@ -83,6 +87,10 @@ def get_rejection_percentage_for_number_card_castech(filters):
     return {
         "value": rejection_percentage,
         "fieldtype": "Percent",
-        "route_options": {"from_date": filters.get("from_date")},
+         "route_options": {
+            "from_date": filters.get("from_date"),
+            "to_date": filters.get("to_date"),
+            "company": "RBD Castech Pvt Ltd" 
+        },
         "route": ["query-report", "Rejection Analysis"]
     }
