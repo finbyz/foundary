@@ -8,8 +8,7 @@ frappe.query_reports["Rejection Analysis"] = {
 			fieldname: 'company',
 			label: __('Company'),
 			fieldtype: 'Link',
-			options: 'Company',
-			default: frappe.defaults.get_user_default("Company") 
+			options: 'Company', 
 
 		},
 		{
