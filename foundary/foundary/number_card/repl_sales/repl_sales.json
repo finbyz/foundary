@@ -12,14 +12,14 @@
  "is_public": 1,
  "is_standard": 1,
  "label": "REPL Sales",
- "modified": "2024-10-14 16:39:51.368939",
+ "modified": "2024-10-24 16:10:44.452275",
  "modified_by": "Administrator",
  "module": "Foundary",
  "name": "REPL Sales",
  "owner": "Administrator",
  "parent_document_type": "",
  "report_function": "Sum",
- "show_percentage_stats": 1,
+ "show_percentage_stats": 0,
  "stats_time_interval": "Monthly",
  "type": "Document Type"
 }
