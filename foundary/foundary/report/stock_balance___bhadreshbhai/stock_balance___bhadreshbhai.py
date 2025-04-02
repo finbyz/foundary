@@ -6,6 +6,7 @@ from typing import Any, TypedDict
 
 import frappe
 from frappe import _
+from frappe.query_builder import Criterion
 from frappe.query_builder import Order
 from frappe.query_builder.functions import Coalesce
 from frappe.utils import add_days, cint, date_diff, flt, getdate
@@ -63,7 +64,6 @@ class StockBalanceReport:
         self.prepare_opening_data_from_closing_balance()
         self.prepare_stock_ledger_entries()
         self.prepare_new_data()
-
         if not self.columns:
             self.columns = self.get_columns()
 
@@ -137,9 +137,10 @@ class StockBalanceReport:
                 report_data.update(stock_ageing_data)
 
             # Get weight per unit for the item
-            item_weight_data = item_weights.get(report_data.item_code, {"weight_per_unit": 0.0, "weight_uom": ""})
+            item_weight_data = item_weights.get(report_data.item_code, {"weight_per_unit": 0.0, "weight_uom": "", "item_grade":""})
             weight_per_unit = item_weight_data["weight_per_unit"]
             weight_uom = item_weight_data["weight_uom"]
+            item_grade = item_weight_data["item_grade"]
             
             # Calculate total weight (balance quantity * weight per unit)
             total_weight = flt(report_data.bal_qty) * weight_per_unit
@@ -149,7 +150,8 @@ class StockBalanceReport:
                     "reserved_stock": sre_details.get((report_data.item_code, report_data.warehouse), 0.0),
                     "weight_per_unit": weight_per_unit,
                     "weight_uom": weight_uom,
-                    "total_weight": total_weight
+                    "total_weight": total_weight,
+                    "item_grade":item_grade
                 }
             )
 
@@ -173,13 +175,14 @@ class StockBalanceReport:
         items = frappe.get_all(
             "Item", 
             filters={"name": ["in", item_codes]}, 
-            fields=["name", "weight_per_unit", "weight_uom"]
+            fields=["name", "weight_per_unit", "weight_uom", "item_grade"]
         )
         
         return {
             item.name: {
                 "weight_per_unit": item.weight_per_unit or 0.0,
-                "weight_uom": item.weight_uom or ""
+                "weight_uom": item.weight_uom or "",
+                "item_grade":item.item_grade or ""
             } 
             for item in items
         }
@@ -263,11 +266,12 @@ class StockBalanceReport:
         qty_dict.bal_val += value_diff
 
     def initialize_data(self, item_warehouse_map, group_by_key, entry):
+        # frappe.throw(str(entry))
         opening_data = self.opening_data.get(group_by_key, {})
-
         item_warehouse_map[group_by_key] = frappe._dict(
             {
                 "item_code": entry.item_code,
+                "item_grade": entry.item_grade if entry.item_grade is not None else "",
                 "warehouse": entry.warehouse,
                 "item_group": entry.item_group,
                 "company": entry.company,
@@ -318,12 +322,30 @@ class StockBalanceReport:
             .limit(1)
         )
 
-        for fieldname in ["warehouse", "item_code", "item_group", "warehouse_type"]:
-            if self.filters.get(fieldname):
-                query = query.where(table[fieldname] == self.filters.get(fieldname))
+        # Handle warehouse filter
+        if warehouse := self.filters.get("warehouse"):
+            if warehouse:  # Check if not empty
+                if isinstance(warehouse, str):
+                    query = query.where(table.warehouse == warehouse)
+                else:  # It's a list
+                    query = query.where(table.warehouse.isin(warehouse))
+
+        # Handle item_code filter
+        if item_code := self.filters.get("item_code"):
+            query = query.where(table.item_code == item_code)
+
+        # Handle item_group filter
+        if item_groups := self.filters.get("item_group"):
+            if isinstance(item_groups, str):
+                query = query.where(table.item_group == item_groups)
+            else:  # It's a list
+                query = query.where(table.item_group.isin(item_groups))
+
+        # Handle warehouse_type filter
+        if warehouse_type := self.filters.get("warehouse_type"):
+            query = query.where(table.warehouse_type == warehouse_type)
 
         return query.run(as_dict=True)
-
     def prepare_stock_ledger_entries(self):
         sle = frappe.qb.DocType("Stock Ledger Entry")
         item_table = frappe.qb.DocType("Item")
@@ -349,7 +371,9 @@ class StockBalanceReport:
                 sle.serial_no,
                 sle.serial_and_batch_bundle,
                 sle.has_serial_no,
+                item_table.item_grade,
                 item_table.item_group,
+                item_table.is_sample_item,
                 item_table.stock_uom,
                 item_table.item_name,
             )
@@ -378,32 +402,90 @@ class StockBalanceReport:
 
         return query
 
-    def apply_warehouse_filters(self, query, sle) -> str:
-        warehouse_table = frappe.qb.DocType("Warehouse")
+    # def apply_warehouse_filters(self, query, sle) -> str:
+    #     warehouse_table = frappe.qb.DocType("Warehouse")
 
-        if self.filters.get("warehouse"):
-            query = apply_warehouse_filter(query, sle, self.filters)
-        elif warehouse_type := self.filters.get("warehouse_type"):
-            query = (
-                query.join(warehouse_table)
-                .on(warehouse_table.name == sle.warehouse)
-                .where(warehouse_table.warehouse_type == warehouse_type)
+    #     if self.filters.get("warehouse"):
+    #         query = apply_warehouse_filter(query, sle, self.filters)
+    #     elif warehouse_type := self.filters.get("warehouse_type"):
+    #         query = (
+    #             query.join(warehouse_table)
+    #             .on(warehouse_table.name == sle.warehouse)
+    #             .where(warehouse_table.warehouse_type == warehouse_type)
+    #         )
+
+    #     return query
+    # Add this import at the top of the file
+
+    # Then fix the apply_warehouse_filters function
+    def apply_warehouse_filters(self, query, sle) -> str:
+        """Apply warehouse related filters."""
+        if warehouse := self.filters.get("warehouse"):
+            if isinstance(warehouse, str):
+                warehouse = [warehouse]
+                
+            wh = frappe.qb.DocType("Warehouse")
+            warehouse_conditions = []
+            
+            for wh_name in warehouse:
+                wh_details = frappe.db.get_value("Warehouse", wh_name, ["lft", "rgt"], as_dict=True)
+                if wh_details:
+                    warehouse_conditions.append(
+                        sle.warehouse.isin(
+                            frappe.qb.from_(wh)
+                            .select(wh.name)
+                            .where((wh.lft >= wh_details.lft) & (wh.rgt <= wh_details.rgt))
+                        )
+                    )
+            
+            if warehouse_conditions:
+                query = query.where(Criterion.any(warehouse_conditions))
+
+        if warehouse_type := self.filters.get("warehouse_type"):
+            query = query.where(
+                sle.warehouse.isin(
+                    frappe.qb.from_("Warehouse")
+                    .select("name")
+                    .where(warehouse_type == "warehouse_type")
+                )
             )
 
         return query
 
+    # And fix the apply_items_filters function
     def apply_items_filters(self, query, item_table) -> str:
-        if item_group := self.filters.get("item_group"):
-            children = get_descendants_of("Item Group", item_group, ignore_permissions=True)
-            query = query.where(item_table.item_group.isin([*children, item_group]))
+        """Apply item related filters."""
+        if item_groups := self.filters.get("item_group"):
+            if isinstance(item_groups, str):
+                item_groups = [item_groups]
+                
+            ig = frappe.qb.DocType("Item Group")
+            item_group_conditions = []
+            
+            for item_group in item_groups:
+                item_group_details = frappe.db.get_value(
+                    "Item Group", item_group, ["lft", "rgt"], as_dict=True
+                )
+                if item_group_details:
+                    item_group_conditions.append(
+                        item_table.item_group.isin(
+                            frappe.qb.from_(ig)
+                            .select(ig.name)
+                            .where(
+                                (ig.lft >= item_group_details.lft)
+                                & (ig.rgt <= item_group_details.rgt)
+                            )
+                        )
+                    )
+            
+            if item_group_conditions:
+                query = query.where(Criterion.any(item_group_conditions))
 
-        for field in ["item_code", "brand"]:
-            if not self.filters.get(field):
-                continue
-            elif field == "item_code":
-                query = query.where(item_table.name == self.filters.get(field))
-            else:
-                query = query.where(item_table[field] == self.filters.get(field))
+        if brand := self.filters.get("brand"):
+            query = query.where(item_table.brand == brand)
+
+        if item_code := self.filters.get("item_code"):
+            query = query.where(item_table.item_code == item_code)
 
         return query
 
@@ -426,6 +508,12 @@ class StockBalanceReport:
                 "width": 100,
             },
             {"label": _("Item Name"), "fieldname": "item_name", "width": 150},
+            {
+                "label": _("Item Grade"),
+                "fieldname": "item_grade",
+                "fieldtype": "Data",
+                "width": 90,
+            },
             {
                 "label": _("Item Group"),
                 "fieldname": "item_group",
@@ -586,7 +674,7 @@ class StockBalanceReport:
                 table.parent,
             )
             .where((table.parenttype == "Item") & (table.uom == self.filters.include_uom))
-        )
+        ) 
 
         if items:
             query = query.where(table.parent.isin(items))
@@ -681,6 +769,7 @@ def filter_items_with_no_transactions(
                 "warehouse",
                 "item_name",
                 "item_group",
+                # "item_grade"
                 "project",
                 "stock_uom",
                 "company",

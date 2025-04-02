@@ -1,31 +1,57 @@
 {
  "cards": [
   {
-   "card": "Rejection Percentage RBD Engineers Pvt Ltd"
+   "card": "REPL Sales YTD"
   },
   {
-   "card": "RE - Manufactured Weighted Qty"
+   "card": "RE - Gross Profit (Monthly)"
   },
   {
-   "card": "RE - Rejected Qty Weighted"
+   "card": "RE - Net Profit (Monthly)"
   },
   {
-   "card": "REPL Sales"
+   "card": "RE - Stock Value (Monthly)"
   },
   {
-   "card": "Rejection Percentage RBD Castech Pvt Ltd"
+   "card": "RCPL Sales YTD"
   },
   {
-   "card": "RC - Manufactured Weighted Qty"
+   "card": "RC - Gross Profit (Monthly)"
   },
   {
-   "card": "RC - Rejected Qty Weighted"
+   "card": "RC - Net Profit (Monthly)"
   },
   {
-   "card": "RCPL Sales"
+   "card": "RC - Stock Value (Monthly)"
+  },
+  {
+   "card": "Closing Bank Balance"
+  },
+  {
+   "card": "HDFC - 50200002445012"
+  },
+  {
+   "card": "HDFC - 50200001671032"
+  },
+  {
+   "card": "HDFC - 50200003907023"
+  },
+  {
+   "card": "RE - Weekly Manufactured Weighted Qty"
+  },
+  {
+   "card": "RC - Weekly Manufactured Weighted Qty"
   }
  ],
  "charts": [
+  {
+   "chart": "RE - Net Profit (MoM)",
+   "width": "Full"
+  },
+  {
+   "chart": "RC - Net Profit (MoM)",
+   "width": "Full"
+  },
   {
    "chart": "RE - Top Customer",
    "width": "Half"
@@ -41,6 +67,10 @@
   {
    "chart": "RC - Rejected Items",
    "width": "Half"
+  },
+  {
+   "chart": "Stock Value (MoM)",
+   "width": "Half"
   }
  ],
  "creation": "2024-05-05 19:30:43.680534",
@@ -50,7 +80,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "modified": "2024-10-23 16:09:16.353496",
+ "modified": "2025-04-02 10:51:10.912480",
  "modified_by": "Administrator",
  "module": "Foundary",
  "name": "RBD",

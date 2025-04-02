@@ -1,10 +1,8 @@
 // Copyright (c) 2025, Finbyz Tech PVT LTD and contributors
 // For license information, please see license.txt
-// Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors and contributors
-// For license information, please see license.txt
 
-frappe.query_reports["Stock Balance - Bhadreshbhai"] = {
-	filters: [
+frappe.query_reports["Stock value"] = {
+	"filters": [
 		{
 			fieldname: "company",
 			label: __("Company"),
@@ -29,23 +27,13 @@ frappe.query_reports["Stock Balance - Bhadreshbhai"] = {
 			reqd: 1,
 			default: frappe.datetime.get_today(),
 		},
-		// {
-		// 	fieldname: "item_group",
-		// 	label: __("Item Group"),
-		// 	fieldtype: "Link",
-		// 	width: "80",
-		// 	options: "Item Group",
-		// },
 		{
 			fieldname: "item_group",
 			label: __("Item Group"),
-			fieldtype: "MultiSelectList",
+			fieldtype: "Link",
+			width: "80",
 			options: "Item Group",
-			get_data: function(txt) {
-				return frappe.db.get_link_options("Item Group", txt);
-			}
 		},
-		
 		{
 			fieldname: "item_code",
 			label: __("Item"),
@@ -64,32 +52,23 @@ frappe.query_reports["Stock Balance - Bhadreshbhai"] = {
 				};
 			},
 		},
-		// {
-		// 	fieldname: "warehouse",
-		// 	label: __("Warehouse"),
-		// 	fieldtype: "Link",
-		// 	width: "80",
-		// 	options: "Warehouse",
-		// 	get_query: () => {
-		// 		let warehouse_type = frappe.query_report.get_filter_value("warehouse_type");
-		// 		let company = frappe.query_report.get_filter_value("company");
-
-		// 		return {
-		// 			filters: {
-		// 				...(warehouse_type && { warehouse_type }),
-		// 				...(company && { company }),
-		// 			},
-		// 		};
-		// 	},
-		// },
 		{
 			fieldname: "warehouse",
 			label: __("Warehouse"),
-			fieldtype: "MultiSelectList",
+			fieldtype: "Link",
+			width: "80",
 			options: "Warehouse",
-			get_data: function(txt) {
-                return frappe.db.get_link_options("Warehouse", txt);
-            }
+			get_query: () => {
+				let warehouse_type = frappe.query_report.get_filter_value("warehouse_type");
+				let company = frappe.query_report.get_filter_value("company");
+
+				return {
+					filters: {
+						...(warehouse_type && { warehouse_type }),
+						...(company && { company }),
+					},
+				};
+			},
 		},
 		{
 			fieldname: "warehouse_type",
@@ -140,20 +119,7 @@ frappe.query_reports["Stock Balance - Bhadreshbhai"] = {
 			fieldtype: "Check",
 			default: 0,
 		},
-		{
-			fieldname: "show_sample_items",
-			label: __("Show Sample Items"),
-			fieldtype: "Check",
-			default: 0
-		},
-		{
-			fieldname: "exclude_sample_items",
-			label: __("Exclude Sample Items"),
-			fieldtype: "Check",
-			default: 0
-		}
 	],
-
 	formatter: function (value, row, column, data, default_formatter) {
 		value = default_formatter(value, row, column, data);
 
@@ -168,3 +134,6 @@ frappe.query_reports["Stock Balance - Bhadreshbhai"] = {
 };
 
 erpnext.utils.add_inventory_dimensions("Stock Balance", 8);
+
+
+

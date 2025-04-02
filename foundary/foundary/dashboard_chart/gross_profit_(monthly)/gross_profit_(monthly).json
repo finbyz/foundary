@@ -1,0 +1,33 @@
+{
+ "chart_name": "Gross Profit (Monthly)",
+ "chart_type": "Report",
+ "creation": "2025-03-24 16:36:16.913228",
+ "currency": "INR",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "dynamic_filters_json": "{}",
+ "filters_json": "{\"company\":\"RBD Engineers Pvt Ltd\",\"from_date\":\"2024-04-01\",\"to_date\":\"2025-03-31\",\"group_by\":\"Invoice\"}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "modified": "2025-03-24 16:36:31.833783",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "Gross Profit (Monthly)",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "Gross Profit",
+ "roles": [],
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Bar",
+ "use_report_chart": 0,
+ "x_field": "posting_date",
+ "y_axis": [
+  {
+   "y_field": "gross_profit"
+  }
+ ]
+}

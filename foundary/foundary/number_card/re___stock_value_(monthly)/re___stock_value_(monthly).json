@@ -1,0 +1,23 @@
+{
+ "creation": "2025-03-25 15:28:51.315346",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "dynamic_filters_json": "{}",
+ "filters_json": "{\"company\":\"RBD Engineers Pvt Ltd\",\"from_date\":\"2025-02-27\",\"to_date\":\"2025-03-27\",\"valuation_field_type\":\"Currency\",\"ignore_closing_balance\":0,\"include_zero_stock_items\":0,\"show_dimension_wise_stock\":0}",
+ "function": "Count",
+ "idx": 5,
+ "is_public": 0,
+ "is_standard": 1,
+ "label": "RE - Stock Value (Monthly)",
+ "modified": "2025-03-27 13:07:08.160679",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "RE - Stock Value (Monthly)",
+ "owner": "Administrator",
+ "report_field": "bal_val",
+ "report_function": "Sum",
+ "report_name": "Stock Balance",
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Daily",
+ "type": "Report"
+}
