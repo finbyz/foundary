@@ -274,6 +274,13 @@ def get_columns(filters):
                 "width": 90,
         },
         {
+                "label": _("Item Group"),
+                "fieldname": "item_group",
+                "fieldtype": "Link",
+                "options": "Item Group",
+                "width": 100,
+            },
+        {
             "label": _("Stock UOM"),
             "fieldname": "stock_uom",
             "fieldtype": "Link",
@@ -341,14 +348,6 @@ def get_columns(filters):
                 "fieldtype": "Link",
                 "options": "Warehouse",
                 "width": 150,
-            },
-            
-            {
-                "label": _("Item Group"),
-                "fieldname": "item_group",
-                "fieldtype": "Link",
-                "options": "Item Group",
-                "width": 100,
             },
             {
                 "label": _("Brand"),

@@ -4,13 +4,14 @@
  "docstatus": 0,
  "doctype": "Number Card",
  "dynamic_filters_json": "{\"from_date\":\"frappe.datetime.month_start()\",\"to_date\":\"frappe.datetime.add_days(frappe.datetime.add_months(frappe.datetime.month_start(), 1), -1);\"}",
- "filters_json": "{\"company\":\"RBD Castech Pvt Ltd\",\"valuation_field_type\":\"Currency\",\"show_variant_attributes\":0,\"show_stock_ageing_data\":0,\"ignore_closing_balance\":0,\"include_zero_stock_items\":0,\"show_dimension_wise_stock\":0,\"from_date\":\"2025-02-25\",\"to_date\":\"2025-03-25\"}",
+ "filters_json": "{\"company\":\"RBD Castech Pvt Ltd\",\"valuation_field_type\":\"Currency\",\"show_variant_attributes\":0,\"show_stock_ageing_data\":0,\"ignore_closing_balance\":0,\"include_zero_stock_items\":0,\"show_dimension_wise_stock\":0}",
  "function": "Count",
- "idx": 3,
+ "idx": 11,
  "is_public": 0,
  "is_standard": 1,
  "label": "RC - Stock Value (Monthly)",
- "modified": "2025-03-25 22:44:34.741907",
+ "method": "foundary.foundary.override_whitelisted.override_whitelisted.stock_value.rc_stock_value",
+ "modified": "2025-04-02 16:56:23.537609",
  "modified_by": "Administrator",
  "module": "Foundary",
  "name": "RC - Stock Value (Monthly)",
@@ -20,5 +21,5 @@
  "report_name": "Stock Balance",
  "show_percentage_stats": 1,
  "stats_time_interval": "Daily",
- "type": "Report"
+ "type": "Custom"
 }

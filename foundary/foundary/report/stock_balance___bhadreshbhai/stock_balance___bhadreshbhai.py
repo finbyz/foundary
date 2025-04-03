@@ -428,6 +428,7 @@ class StockBalanceReport:
             warehouse_conditions = []
             
             for wh_name in warehouse:
+        
                 wh_details = frappe.db.get_value("Warehouse", wh_name, ["lft", "rgt"], as_dict=True)
                 if wh_details:
                     warehouse_conditions.append(
@@ -486,6 +487,12 @@ class StockBalanceReport:
 
         if item_code := self.filters.get("item_code"):
             query = query.where(item_table.item_code == item_code)
+        
+        if self.filters.get("show_sample_items"):
+            query = query.where(item_table.is_sample_item == 1)  # Assuming a field `is_sample_item`
+        elif self.filters.get("exclude_sample_items"):
+            query = query.where(item_table.is_sample_item != 1)  # Exclude sample items
+
 
         return query
 

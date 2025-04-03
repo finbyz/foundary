@@ -5,11 +5,12 @@
  "doctype": "Number Card",
  "filters_json": "{\"tree_type\":\"Customer\",\"doc_type\":\"Sales Invoice\",\"value_quantity\":\"Value\",\"from_date\":\"2025-04-01\",\"to_date\":\"2026-03-31\",\"company\":\"RBD Engineers Pvt Ltd\",\"range\":\"Monthly\"}",
  "function": "Count",
- "idx": 0,
+ "idx": 3,
  "is_public": 0,
  "is_standard": 1,
  "label": "REPL Sales YTD",
- "modified": "2025-04-02 10:52:39.897018",
+ "method": "foundary.foundary.override_whitelisted.override_whitelisted.sales.re_sales_yet",
+ "modified": "2025-04-03 11:32:49.910164",
  "modified_by": "Administrator",
  "module": "Foundary",
  "name": "REPL Sales YTD",
@@ -19,5 +20,5 @@
  "report_name": "Sales Analytics",
  "show_percentage_stats": 1,
  "stats_time_interval": "Daily",
- "type": "Report"
+ "type": "Custom"
 }

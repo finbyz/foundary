@@ -3,13 +3,14 @@
  "docstatus": 0,
  "doctype": "Number Card",
  "dynamic_filters_json": "{}",
- "filters_json": "{\"company\":\"RBD Engineers Pvt Ltd\",\"from_date\":\"2025-02-27\",\"to_date\":\"2025-03-27\",\"valuation_field_type\":\"Currency\",\"ignore_closing_balance\":0,\"include_zero_stock_items\":0,\"show_dimension_wise_stock\":0}",
+ "filters_json": "{\"company\":\"RBD Engineers Pvt Ltd\",\"from_date\":\"2025-03-03\",\"to_date\":\"2025-04-03\",\"valuation_field_type\":\"Currency\",\"ignore_closing_balance\":0,\"include_zero_stock_items\":0,\"show_dimension_wise_stock\":0}",
  "function": "Count",
- "idx": 5,
+ "idx": 12,
  "is_public": 0,
  "is_standard": 1,
  "label": "RE - Stock Value (Monthly)",
- "modified": "2025-03-27 13:07:08.160679",
+ "method": "foundary.foundary.override_whitelisted.override_whitelisted.stock_value.re_stock_value",
+ "modified": "2025-04-03 07:46:40.759615",
  "modified_by": "Administrator",
  "module": "Foundary",
  "name": "RE - Stock Value (Monthly)",
@@ -19,5 +20,5 @@
  "report_name": "Stock Balance",
  "show_percentage_stats": 1,
  "stats_time_interval": "Daily",
- "type": "Report"
+ "type": "Custom"
 }
