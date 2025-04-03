@@ -13,7 +13,7 @@
  "is_standard": 1,
  "label": "RC - Manufactured Weighted Qty (Weekly)",
  "method": "foundary.foundary.override_whitelisted.override_whitelisted.rejection_percentage.rc_manufactured_qty_weighted",
- "modified": "2025-04-03 14:40:44.939502",
+ "modified": "2025-04-03 14:52:26.220080",
  "modified_by": "Administrator",
  "module": "Foundary",
  "name": "RC - Manufactured Weighted Qty",
