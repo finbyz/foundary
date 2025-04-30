@@ -146,7 +146,7 @@ def get_chart_data(filters):
 		jc.production_item
 	ORDER BY
 		total_rejected DESC
-	LIMIT 10
+	LIMIT 30
 	""",as_dict=True)
 
 	custom_labels = []
