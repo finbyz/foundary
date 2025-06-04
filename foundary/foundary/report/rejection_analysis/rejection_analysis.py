@@ -46,10 +46,10 @@ def get_data(filters):
 	JOIN
 		`tabItem` i ON jc.production_item = i.item_code
 	INNER JOIN (
-	SELECT work_order, MAX(creation) AS max_created
-	FROM `tabJob Card`
-	WHERE status = 'Completed' AND docstatus = 1 {conditions}
-	GROUP BY work_order
+	SELECT jc.work_order, MAX(jc.creation) AS max_created
+	FROM `tabJob Card` as jc
+	WHERE jc.status = 'Completed' AND jc.docstatus = 1 {conditions}
+	GROUP BY jc.work_order
 	) latest_jc ON jc.work_order = latest_jc.work_order AND jc.creation = latest_jc.max_created
 	WHERE
 		jc.status = 'Completed'{conditions} and jc.docstatus = 1
