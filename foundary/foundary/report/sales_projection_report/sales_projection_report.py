@@ -24,10 +24,24 @@ def execute(filters=None):
     data = []
     projected_qty = 0
     projected_amount = 0
+    
+    sales_order_filters = {"docstatus": 1}
+    
+    if filters.get("company"):
+        sales_order_filters["company"] = filters["company"]
+    
+    if filters.get("from_date") and filters.get("to_date"):
+        sales_order_filters["transaction_date"] = ["between", [filters["from_date"], filters["to_date"]]]
+    elif filters.get("from_date"):
+        sales_order_filters["transaction_date"] = [">=", filters["from_date"]]
+    elif filters.get("to_date"):
+        sales_order_filters["transaction_date"] = ["<=", filters["to_date"]]
 
-    sales_orders = frappe.db.get_all("Sales Order", filters={"docstatus": 1}, fields=[
+    sales_orders = frappe.db.get_all("Sales Order", filters=sales_order_filters, fields=[
         "name", "customer", "base_total", "total_qty", "total_commited_amount_inr", "total_committed_amount","total_committed_qty"
     ])
+    
+
 
     for so in sales_orders:
         actuals = frappe.db.sql("""
