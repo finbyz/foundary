@@ -22,6 +22,18 @@ frappe.query_reports["Sales Projection Report"] = {
 		"label": "To Date",
 		"fieldtype": "Date",
 		"reqd": 0
+		},
+		{
+			"fieldname": "month",
+			"label": "Month",
+			"fieldtype": "Select",
+			"options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+		},
+		{
+			"fieldname": "year",
+			"label": "Year",
+			"fieldtype": "Int",
+			"default": (new Date()).getFullYear()
 		}
 	]
 };

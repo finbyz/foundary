@@ -5,6 +5,8 @@
 
 import frappe
 from frappe.utils import flt
+from frappe.utils import getdate
+import calendar
 
 def execute(filters=None):
     columns = [
@@ -27,15 +29,37 @@ def execute(filters=None):
     
     sales_order_filters = {"docstatus": 1}
     
+    month_name = filters.get("month")
+    year = filters.get("year")
+
+    if month_name and year:
+        try:
+            month_number = {
+                "January": 1, "February": 2, "March": 3, "April": 4,
+                "May": 5, "June": 6, "July": 7, "August": 8,
+                "September": 9, "October": 10, "November": 11, "December": 12
+            }[month_name]
+
+            year = int(year)
+            from_date = getdate(f"{year}-{month_number:02d}-01")
+            last_day = calendar.monthrange(year, month_number)[1]
+            to_date = getdate(f"{year}-{month_number:02d}-{last_day}")
+
+            sales_order_filters["delivery_date"] = ["between", [from_date, to_date]]
+        except KeyError:
+            frappe.throw(f"Invalid month: {month_name}")
+        except ValueError:
+            frappe.throw("Invalid year format")
+    
     if filters.get("company"):
         sales_order_filters["company"] = filters["company"]
     
     if filters.get("from_date") and filters.get("to_date"):
-        sales_order_filters["transaction_date"] = ["between", [filters["from_date"], filters["to_date"]]]
+        sales_order_filters["delivery_date"] = ["between", [filters["from_date"], filters["to_date"]]]
     elif filters.get("from_date"):
-        sales_order_filters["transaction_date"] = [">=", filters["from_date"]]
+        sales_order_filters["delivery_date"] = [">=", filters["from_date"]]
     elif filters.get("to_date"):
-        sales_order_filters["transaction_date"] = ["<=", filters["to_date"]]
+        sales_order_filters["delivery_date"] = ["<=", filters["to_date"]]
 
     sales_orders = frappe.db.get_all("Sales Order", filters=sales_order_filters, fields=[
         "name", "customer", "base_total", "total_qty", "total_commited_amount_inr", "total_committed_amount","total_committed_qty"
