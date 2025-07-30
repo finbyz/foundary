@@ -234,6 +234,25 @@ doc_events = {
 #	}
 # ]
 
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["name", "in", [
+                "Sales Order Item-committed_qty",
+                "Sales Order Item-committed_amount",
+                "Sales Order-total_committed_qty",
+                "Sales Order-total_committed_amount",
+                "Sales Order Item-commited_amount_company_currency",
+                "Sales Order-toral_commited_amount_inr"
+            ]]
+        ]
+    }
+]
+
+
+
+
 # Authentication and authorization
 # --------------------------------
 
