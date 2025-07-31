@@ -29,27 +29,60 @@ def execute(filters=None):
     
     sales_order_filters = {"docstatus": 1}
     
+    # month_name = filters.get("month")
+    # year = filters.get("year")
+
+    # if month_name and year:
+    #     try:
+    #         month_number = {
+    #             "January": 1, "February": 2, "March": 3, "April": 4,
+    #             "May": 5, "June": 6, "July": 7, "August": 8,
+    #             "September": 9, "October": 10, "November": 11, "December": 12
+    #         }[month_name]
+
+    #         year = int(year)
+    #         from_date = getdate(f"{year}-{month_number:02d}-01")
+    #         last_day = calendar.monthrange(year, month_number)[1]
+    #         to_date = getdate(f"{year}-{month_number:02d}-{last_day}")
+
+    #         sales_order_filters["delivery_date"] = ["between", [from_date, to_date]]
+    #     except KeyError:
+    #         frappe.throw(f"Invalid month: {month_name}")
+    #     except ValueError:
+    #         frappe.throw("Invalid year format")
+    
     month_name = filters.get("month")
-    year = filters.get("year")
+    fy = filters.get("financial_year")
 
-    if month_name and year:
-        try:
-            month_number = {
-                "January": 1, "February": 2, "March": 3, "April": 4,
-                "May": 5, "June": 6, "July": 7, "August": 8,
-                "September": 9, "October": 10, "November": 11, "December": 12
-            }[month_name]
+    if month_name and fy:
+        # Get Fiscal Year start and end dates
+        fy_doc = frappe.get_doc("Fiscal Year", fy)
+        year_start = fy_doc.year_start_date
 
-            year = int(year)
-            from_date = getdate(f"{year}-{month_number:02d}-01")
-            last_day = calendar.monthrange(year, month_number)[1]
-            to_date = getdate(f"{year}-{month_number:02d}-{last_day}")
+        # Month number
+        month_number = {
+            "January": 1, "February": 2, "March": 3, "April": 4,
+            "May": 5, "June": 6, "July": 7, "August": 8,
+            "September": 9, "October": 10, "November": 11, "December": 12
+        }.get(month_name)
 
-            sales_order_filters["delivery_date"] = ["between", [from_date, to_date]]
-        except KeyError:
-            frappe.throw(f"Invalid month: {month_name}")
-        except ValueError:
-            frappe.throw("Invalid year format")
+        if not month_number:
+            frappe.throw("Invalid Month Selected")
+
+        # Compute the actual year for the selected month
+        base_year = year_start.year
+        if month_number < year_start.month:
+            base_year += 1
+
+        from_date = getdate(f"{base_year}-{month_number:02d}-01")
+        last_day = calendar.monthrange(base_year, month_number)[1]
+        to_date = getdate(f"{base_year}-{month_number:02d}-{last_day}")
+
+        # Use from_date and to_date in your filters
+        sales_order_filters = {
+            "delivery_date": ["between", [from_date, to_date]],
+            "docstatus": 1
+        }
     
     if filters.get("company"):
         sales_order_filters["company"] = filters["company"]
@@ -68,15 +101,28 @@ def execute(filters=None):
 
 
     for so in sales_orders:
+    #     actuals = frappe.db.sql("""
+    #         SELECT
+    #             SUM(sii.qty) AS actual_qty,
+    #             SUM(si.base_total) AS actual_amount
+    #         FROM
+    #             `tabSales Invoice Item` sii
+    #         INNER JOIN `tabSales Invoice` si ON si.name = sii.parent
+    #         WHERE sii.sales_order = %s AND si.docstatus = 1
+    #     """, so.name, as_dict=True)[0]
+    
         actuals = frappe.db.sql("""
             SELECT
-                SUM(sii.qty) AS actual_qty,
+                SUM(si.total_qty) AS actual_qty,
                 SUM(si.base_total) AS actual_amount
-            FROM
-                `tabSales Invoice Item` sii
-            INNER JOIN `tabSales Invoice` si ON si.name = sii.parent
-            WHERE sii.sales_order = %s AND si.docstatus = 1
+            FROM `tabSales Invoice` si
+            WHERE si.name IN (
+                SELECT DISTINCT parent
+                FROM `tabSales Invoice Item`
+                WHERE sales_order = %s
+            ) AND si.docstatus = 1
         """, so.name, as_dict=True)[0]
+
 
         actual_qty = flt(actuals.actual_qty)
         actual_amount = flt(actuals.actual_amount)

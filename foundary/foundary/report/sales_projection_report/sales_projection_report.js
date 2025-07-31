@@ -30,10 +30,11 @@ frappe.query_reports["Sales Projection Report"] = {
 			"options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
 		},
 		{
-			"fieldname": "year",
-			"label": "Year",
-			"fieldtype": "Int",
-			"default": (new Date()).getFullYear()
+			"fieldname": "financial_year",
+			"label": "Financial Year",
+			"fieldtype": "Link",
+			"options": "Fiscal Year",
+			"default": frappe.defaults.get_default("fiscal_year")
 		}
 	]
 };
