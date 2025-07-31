@@ -7,6 +7,22 @@ import frappe
 from frappe.utils import flt
 from frappe.utils import getdate
 import calendar
+from frappe.utils import getdate, nowdate
+
+
+@frappe.whitelist()
+def get_current_fiscal_year():
+    from frappe.utils import nowdate, getdate
+    today = getdate(nowdate())
+    fiscal_year = frappe.get_all("Fiscal Year", 
+        filters={
+            "year_start_date": ["<=", today],
+            "year_end_date": [">=", today]
+        },
+        fields=["name"],
+        limit=1
+    )
+    return fiscal_year[0].name if fiscal_year else None
 
 def execute(filters=None):
     columns = [
@@ -52,6 +68,11 @@ def execute(filters=None):
     #         frappe.throw("Invalid year format")
     
     month_name = filters.get("month")
+    
+    
+    if not filters.get("financial_year"):
+        filters["financial_year"] = get_current_fiscal_year()
+    
     fy = filters.get("financial_year")
 
     if month_name and fy:
@@ -147,15 +168,4 @@ def execute(filters=None):
             "sales_order": so.name
         })
         
-
-    data.append({
-        "customer": "Projected Qty",
-        "committed_qty": projected_qty
-    })
-
-    data.append({
-        "customer": "Projected Amount",
-        "committed_amount": projected_amount
-    })
-
     return columns, data

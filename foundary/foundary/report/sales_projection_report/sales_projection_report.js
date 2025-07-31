@@ -2,6 +2,18 @@
 // For license information, please see license.txt
 
 frappe.query_reports["Sales Projection Report"] = {
+
+	onload: function(report) {
+        frappe.call({
+            method: "foundary.foundary.report.sales_projection_report.sales_projection_report.get_current_fiscal_year",
+            callback: function(r) {
+                if (r.message) {
+                    report.set_filter_value("financial_year", r.message);
+                }
+            }
+        });
+    },
+
 	"filters": [
 		{
 		"fieldname": "company",
