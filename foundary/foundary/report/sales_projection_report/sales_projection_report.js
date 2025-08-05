@@ -12,6 +12,8 @@ frappe.query_reports["Sales Projection Report"] = {
                 }
             }
         });
+		const currentMonth = frappe.datetime.str_to_obj(frappe.datetime.get_today()).toLocaleString('default', { month: 'long' });
+        report.page.fields_dict.month.set_value(currentMonth);
     },
 
 	"filters": [
