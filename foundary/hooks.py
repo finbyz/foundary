@@ -36,6 +36,7 @@ doctype_js = {
     "BOM": "public/doc_js/bom.js",
     "Quality Inspection": "public/doc_js/quality_inspection.js",
     "Payment Entry": "public/doc_js/payment_entry.js",
+    "Sales Order": "public/doc_js/sales_order.js",
 }
 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
@@ -263,6 +264,11 @@ fixtures = [
 from erpnext.manufacturing.report.job_card_summary import job_card_summary
 from foundary.foundary.report.job_card_summary import execute
 job_card_summary.execute = execute
+
+# sales invoice override exim to foundary app
+import exim.exim.doc_events.sales_invoice as exim_sales_invoice
+import foundary.foundary.doc_events.sales_invoice as foundary_sales_invoice
+exim_sales_invoice.create_jv = foundary_sales_invoice.custom_create_jv
 
 # from erpnext.stock.doctype.quality_inspection_template import quality_inspection_template
 # from foundary.foundary.doc_events.quality_inspection_template import get_template_details
