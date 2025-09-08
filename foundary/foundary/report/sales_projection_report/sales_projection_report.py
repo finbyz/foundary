@@ -124,12 +124,15 @@ def execute(filters=None):
         actual_amount = flt(actuals.actual_amount)
         
         committed_qty = flt(so.total_committed_qty)
-        committed_amount = flt(so.total_committed_amount)
+        committed_amount = flt(so.total_commited_amount_inr)
 
         # Add to projected totals
-        projected_qty += committed_qty
-        projected_amount += committed_amount
-
+        # projected_qty += committed_qty
+        # projected_amount += committed_amount
+        frappe.msgprint("Commited Amount")
+        frappe.msgprint("",str(committed_amount))
+        frappe.msgprint("Actual Amount")
+        frappe.msgprint(str(actual_amount))
         data.append({
             "customer": so.customer,
             "sales_order_amount": so.base_total,
@@ -138,8 +141,8 @@ def execute(filters=None):
             "sales_order_qty": so.total_qty,
             "committed_qty": so.total_committed_qty,
             "actual_qty": actual_qty,
-            "diff_qty": flt(so.total_committed_qty) - actual_qty,
-            "diff_amount": flt(so.total_committed_amount) - actual_amount,
+            "diff_qty": committed_qty- actual_qty,
+            "diff_amount": committed_amount - actual_amount,
             "sales_order": so.name
         })
         
