@@ -129,10 +129,7 @@ def execute(filters=None):
         # Add to projected totals
         # projected_qty += committed_qty
         # projected_amount += committed_amount
-        frappe.msgprint("Commited Amount")
-        frappe.msgprint("",str(committed_amount))
-        frappe.msgprint("Actual Amount")
-        frappe.msgprint(str(actual_amount))
+
         data.append({
             "customer": so.customer,
             "sales_order_amount": so.base_total,
