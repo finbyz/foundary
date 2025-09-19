@@ -1,0 +1,130 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "TRGHG-.YYYY.-.MM.-.####",
+ "creation": "2025-08-18 14:46:50.262993",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "part_no",
+  "cutter_specification",
+  "types_of_tool",
+  "tool_change_frequency",
+  "column_break_rllr",
+  "operation",
+  "tolerance",
+  "tool_life",
+  "run_out",
+  "section_break_bjmc",
+  "tool_re_grinding_history_detail"
+ ],
+ "fields": [
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Part No",
+   "options": "Part"
+  },
+  {
+   "fieldname": "cutter_specification",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Cutter Specification"
+  },
+  {
+   "fieldname": "types_of_tool",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Types Of Tool",
+   "options": "Tool Type"
+  },
+  {
+   "fieldname": "tool_change_frequency",
+   "fieldtype": "Data",
+   "label": "Tool Change Frequency"
+  },
+  {
+   "fieldname": "operation",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Operation"
+  },
+  {
+   "fieldname": "tool_life",
+   "fieldtype": "Data",
+   "label": "Tool Life"
+  },
+  {
+   "fieldname": "run_out",
+   "fieldtype": "Data",
+   "label": "Run Out"
+  },
+  {
+   "fieldname": "column_break_rllr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tool_re_grinding_history_detail",
+   "fieldtype": "Table",
+   "label": "Tool Re grinding History Detail",
+   "options": "Tool Re-grinding History Detail"
+  },
+  {
+   "fieldname": "section_break_bjmc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tolerance",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Tolerance"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-09-05 14:44:29.231897",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "Tool Re-Grinding History Card",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Tool Room Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

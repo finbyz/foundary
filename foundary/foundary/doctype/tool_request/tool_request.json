@@ -1,0 +1,170 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-08-08 09:41:42.877427",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_u4tj",
+  "naming_series",
+  "purpose",
+  "required_by",
+  "column_break_dqjd",
+  "date",
+  "company",
+  "status",
+  "section_break_h1k7",
+  "source_tool_warehouse",
+  "column_break_1ngn",
+  "target_tool_warehouse",
+  "section_break_370q",
+  "part_no",
+  "tool_request_details",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Naming Series",
+   "options": "TR-.YYYY.-.MM.-.####\nTR-.YYYY.-.####",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Tool Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Purpose",
+   "options": "\nTransfer"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_u4tj",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  },
+  {
+   "fieldname": "column_break_dqjd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "source_tool_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Tool Warehouse",
+   "options": "Tool Warehouse"
+  },
+  {
+   "fieldname": "target_tool_warehouse",
+   "fieldtype": "Link",
+   "label": "Target Tool Warehouse",
+   "options": "Tool Warehouse"
+  },
+  {
+   "fieldname": "column_break_1ngn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_370q",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "required_by",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Required By"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nDraft\nSubmitted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_h1k7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tool_request_details",
+   "fieldtype": "Table",
+   "label": "Tool Request Details",
+   "options": "Tool Request Details"
+  },
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Link",
+   "label": "Part No",
+   "options": "Part"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-09-05 14:41:33.763637",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "Tool Request",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Tool Room Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

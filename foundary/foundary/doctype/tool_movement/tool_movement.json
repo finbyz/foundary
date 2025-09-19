@@ -1,0 +1,181 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-08-01 11:37:01.741458",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "date",
+  "time",
+  "tool_movement_type",
+  "supplier_name",
+  "address",
+  "challan_no",
+  "column_break_zicg",
+  "company",
+  "source_tool_warehouse",
+  "target_tool_warehouse",
+  "status",
+  "section_break_jmsj",
+  "tool_movement_details",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "TM-.YYYY.-\nTM-.YYYY.MM.-\nTLMV-.YYYY.-"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Issue Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_zicg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_tool_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Source Tool Warehouse",
+   "mandatory_depends_on": "eval:doc.tool_movement_type == \"Tool Transfer\"",
+   "options": "Tool Warehouse"
+  },
+  {
+   "fieldname": "target_tool_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Target Tool Warehouse",
+   "mandatory_depends_on": "eval:doc.tool_movement_type == \"Tool Receipt\" || doc.tool_movement_type == \"Tool Transfer\";",
+   "options": "Tool Warehouse"
+  },
+  {
+   "fieldname": "section_break_jmsj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tool_movement_details",
+   "fieldtype": "Table",
+   "label": "Tool Movement Details",
+   "options": "Tool Movement Details"
+  },
+  {
+   "fieldname": "tool_movement_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Tool Movement Type",
+   "options": "Tool Movement Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Tool Movement",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nDraft\nSubmitted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.tool_movement_type ===\"External Calibration\" || doc.tool_movement_type ===\"External Calibration Return\"",
+   "fieldname": "supplier_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier Name",
+   "mandatory_depends_on": "eval:doc.tool_movement_type ===\"External Calibration\" || doc.tool_movement_type ===\"External Calibration Return\"",
+   "options": "Supplier"
+  },
+  {
+   "depends_on": "eval:doc.supplier_name",
+   "fetch_from": "supplier_name.primary_address",
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "Address"
+  },
+  {
+   "depends_on": "eval:doc.tool_movement_type ===\"External Calibration\" || doc.tool_movement_type ===\"External Calibration Return\"",
+   "fieldname": "challan_no",
+   "fieldtype": "Data",
+   "label": "Challan No.",
+   "mandatory_depends_on": "eval:doc.tool_movement_type ===\"External Calibration\" || doc.tool_movement_type ===\"External Calibration Return\""
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-09-05 14:42:05.031290",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "Tool Movement",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Tool Room Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

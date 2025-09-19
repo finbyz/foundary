@@ -1,0 +1,254 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-08-01 12:22:04.877885",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "tool_code",
+  "tool_name",
+  "report_date",
+  "due_date",
+  "column_break_y0fv",
+  "status",
+  "calibration_type",
+  "company",
+  "section_break_w3zc",
+  "gauge_description",
+  "make",
+  "size",
+  "go",
+  "no_go",
+  "part_no_and_name",
+  "column_break_4ilv",
+  "acceptance_criteria_go",
+  "acceptance_criteria_nogo",
+  "master_instruments_used_in_calibration",
+  "range_lc",
+  "ref_of_calibration_procedure",
+  "calibration_due_date_of",
+  "master_instruments",
+  "section_break_ls9p",
+  "calibration_template",
+  "calibration_report_reading",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "report_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Report date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nComplete\nPending\nIn-Process"
+  },
+  {
+   "fieldname": "column_break_y0fv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "calibration_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Calibration Type",
+   "options": "\nInternal\nExternal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ls9p",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "calibration_template",
+   "fieldtype": "Link",
+   "label": "Calibration Template",
+   "options": "Calibration Template"
+  },
+  {
+   "fieldname": "calibration_report_reading",
+   "fieldtype": "Table",
+   "label": "Calibration Report Reading",
+   "options": "Calibration Report Reading"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "CAL-.YYYY.-.MM.-.####\nCAL-.YY.-.####"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Calibration Report",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "tool_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Tool Code",
+   "options": "Tool"
+  },
+  {
+   "fetch_from": "tool_code.tool_name",
+   "fieldname": "tool_name",
+   "fieldtype": "Data",
+   "label": "Tool Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Due Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gauge_description",
+   "fieldtype": "Data",
+   "label": "Gauge Description"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Make"
+  },
+  {
+   "fieldname": "size",
+   "fieldtype": "Data",
+   "label": "Size"
+  },
+  {
+   "fieldname": "go",
+   "fieldtype": "Data",
+   "label": "Go"
+  },
+  {
+   "fieldname": "no_go",
+   "fieldtype": "Data",
+   "label": "No Go"
+  },
+  {
+   "fieldname": "part_no_and_name",
+   "fieldtype": "Link",
+   "label": "Part No./ Name",
+   "options": "Part"
+  },
+  {
+   "fieldname": "acceptance_criteria_go",
+   "fieldtype": "Data",
+   "label": "Acceptance Criteria Go"
+  },
+  {
+   "fieldname": "acceptance_criteria_nogo",
+   "fieldtype": "Data",
+   "label": "Acceptance Criteria NoGo"
+  },
+  {
+   "fieldname": "range_lc",
+   "fieldtype": "Data",
+   "label": "Range / L.C."
+  },
+  {
+   "fieldname": "section_break_w3zc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "master_instruments_used_in_calibration",
+   "fieldtype": "Data",
+   "label": "Master Instruments used in Calibration"
+  },
+  {
+   "fieldname": "ref_of_calibration_procedure",
+   "fieldtype": "Data",
+   "label": "Ref. of Calibration Procedure"
+  },
+  {
+   "fieldname": "column_break_4ilv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "calibration_due_date_of",
+   "fieldtype": "Date",
+   "label": "Calibration Due Date Of"
+  },
+  {
+   "fieldname": "master_instruments",
+   "fieldtype": "Link",
+   "label": "Master Instruments",
+   "options": "Tool"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-09-05 14:41:55.757976",
+ "modified_by": "Administrator",
+ "module": "Foundary",
+ "name": "Calibration Report",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Tool Room Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
