@@ -63,7 +63,7 @@ class CustomStockEntry(StockEntry):
 	def update_valuation_of_scrap_quantity(self):
 		finished_item = frappe.db.get_value("BOM", self.bom_no, "item")
 		for row in self.items:
-			if row.item_code == finished_item and row.item_code and row.is_scrap_item:
+			if row.item_code == finished_item and row.item_code:
 				row.allow_zero_valuation_rate = 0
 		
 		self.calculate_rate_and_amount()
@@ -115,13 +115,17 @@ class CustomStockEntry(StockEntry):
 				data = frappe.get_all(
 					"Work Order Operation",
 					filters={"parent": self.work_order},
-					fields=["sum(process_loss_qty) as process_loss_qty"],
+					fields=[{"SUM": "process_loss_qty", "as": "process_loss_qty"}],
 				)
 
 				finish_data = frappe.get_all(
 					"Stock Entry",
-					filters={"purpose": "Manufacture", "work_order": self.work_order, "docstatus": 1},
-					fields=["sum(process_loss_qty) as process_loss_qty"],
+					filters={
+						"purpose": "Manufacture",
+						"work_order": self.work_order,
+						"docstatus": 1,
+					},
+					fields=[{"SUM": "process_loss_qty", "as": "process_loss_qty"}],
 				)
 
 				if data and data[0].process_loss_qty is not None:
@@ -198,7 +202,7 @@ class CustomStockEntry(StockEntry):
 		# Set rate for outgoing items
 		finished_item = frappe.db.get_value("BOM", self.bom_no, "item")
 		outgoing_items_cost = self.set_rate_for_outgoing_items(reset_outgoing_rate, raise_error_if_no_rate)
-		finished_item_qty = sum(d.transfer_qty for d in self.items if (d.is_finished_item or (d.is_scrap_item and  d.item_code == finished_item)))
+		finished_item_qty = sum(d.transfer_qty for d in self.items if (d.is_finished_item or (d.item_code == finished_item)))
 
 		items = []
 		# Set basic rate for incoming items
@@ -210,7 +214,7 @@ class CustomStockEntry(StockEntry):
 				d.basic_rate = 0.0
 				items.append(d.item_code)
 
-			elif d.is_finished_item or (d.is_scrap_item and d.item_code == finished_item):
+			elif d.is_finished_item or (d.item_code == finished_item):
 				if self.purpose == "Manufacture":
 					d.basic_rate = self.get_basic_rate_for_manufactured_item(
 						finished_item_qty, outgoing_items_cost
@@ -256,7 +260,7 @@ class CustomStockEntry(StockEntry):
 	def get_basic_rate_for_manufactured_item(self, finished_item_qty, outgoing_items_cost=0) -> float:
 		finished_item = frappe.db.get_value("BOM", self.bom_no, "item")
 		settings = frappe.get_single("Manufacturing Settings")
-		scrap_items_cost = sum([flt(d.basic_amount) for d in self.get("items") if d.is_scrap_item and d.item_code != finished_item])
+		scrap_items_cost = sum([flt(d.basic_amount) for d in self.get("items") if d.item_code != finished_item])
 
 		if settings.material_consumption:
 			if settings.get_rm_cost_from_consumption_entry and self.work_order:
@@ -270,7 +274,7 @@ class CustomStockEntry(StockEntry):
 					},
 				):
 					for item in self.items:
-						if not item.is_finished_item and not item.is_scrap_item:
+						if not item.is_finished_item :
 							label = frappe.get_meta(settings.doctype).get_label(
 								"get_rm_cost_from_consumption_entry"
 							)
