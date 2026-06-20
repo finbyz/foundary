@@ -111,7 +111,7 @@ doctype_js = {
 
 override_doctype_class = {
 	"BOM": "foundary.override.override_bom.CustomBOM",
-    "Stock Entry": "foundary.foundary.doc_events.stock_entry.CustomStockEntry",
+    # "Stock Entry": "foundary.foundary.doc_events.stock_entry.CustomStockEntry",
     "Quality Inspection": "foundary.override.quality_inspection.QualityInspection",
 
     # "Job Card": "foundary.foundary.doc_events.job_card.CustomJobCard",
@@ -140,10 +140,10 @@ doc_events = {
         "on_update": "foundary.foundary.doc_events.work_order.on_update",
         "on_update_after_submit": "foundary.foundary.doc_events.work_order.on_update_after_submit"
 	},
-    "Stock Entry": {
-        "validate" : "foundary.foundary.doc_events.stock_entry.validate",
-        "on_submit": "foundary.foundary.doc_events.stock_entry.on_submit"
-	},
+    # "Stock Entry": {
+        # "validate" : "foundary.foundary.doc_events.stock_entry.validate",
+        # "on_submit": "foundary.foundary.doc_events.stock_entry.on_submit"
+	# },
     "BOM": {
         "before_validate": "foundary.foundary.doc_events.Bom.before_validate"
 	},
